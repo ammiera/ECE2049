@@ -1,0 +1,13 @@
+#include <helper.h>
+
+void display_text(char* text) {
+
+}
+
+int check_keypad(void) {
+
+}
+
+void play_music(enum music_types music) {
+
+}

@@ -1,0 +1,50 @@
+
+**** Build of configuration Debug for project ece2049_demo_ccs91 ****
+
+"C:\\Development\\EmbeddedSystems\\ccs\\utils\\bin\\gmake" -k all 
+ 
+Building file: "../main.c"
+Invoking: MSP430 Compiler
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --include_path="C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/grlib" --include_path="C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
+"../main.c", line 28: warning #179-D: variable "i" was declared but never referenced
+"../main.c", line 31: warning #179-D: variable "initial" was declared but never referenced
+Finished building: "../main.c"
+ 
+Building file: "../peripherals.c"
+Invoking: MSP430 Compiler
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --include_path="C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/grlib" --include_path="C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="peripherals.d_raw"  "../peripherals.c"
+Finished building: "../peripherals.c"
+ 
+Building file: "../LcdDriver/HAL_MSP_EXP430FR5529_Sharp96x96.c"
+Invoking: MSP430 Compiler
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --include_path="C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/grlib" --include_path="C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="LcdDriver/HAL_MSP_EXP430FR5529_Sharp96x96.d_raw" --obj_directory="LcdDriver"  "../LcdDriver/HAL_MSP_EXP430FR5529_Sharp96x96.c"
+Finished building: "../LcdDriver/HAL_MSP_EXP430FR5529_Sharp96x96.c"
+ 
+Building file: "../LcdDriver/Sharp96x96.c"
+Invoking: MSP430 Compiler
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --include_path="C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/grlib" --include_path="C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="LcdDriver/Sharp96x96.d_raw" --obj_directory="LcdDriver"  "../LcdDriver/Sharp96x96.c"
+Finished building: "../LcdDriver/Sharp96x96.c"
+ 
+Building file: "../fonts/fontfixed6x8.c"
+Invoking: MSP430 Compiler
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --include_path="C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/grlib" --include_path="C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="fonts/fontfixed6x8.d_raw" --obj_directory="fonts"  "../fonts/fontfixed6x8.c"
+Finished building: "../fonts/fontfixed6x8.c"
+ 
+Building file: "../images/LPRocket_96x37.c"
+Invoking: MSP430 Compiler
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --include_path="C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/grlib" --include_path="C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="images/LPRocket_96x37.d_raw" --obj_directory="images"  "../images/LPRocket_96x37.c"
+Finished building: "../images/LPRocket_96x37.c"
+ 
+Building file: "../images/TI_Logo_69x64.c"
+Invoking: MSP430 Compiler
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --include_path="C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab" --include_path="C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/grlib" --include_path="C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="images/TI_Logo_69x64.d_raw" --obj_directory="images"  "../images/TI_Logo_69x64.c"
+Finished building: "../images/TI_Logo_69x64.c"
+ 
+Building target: "1Lab.out"
+Invoking: MSP430 Linker
+"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/bin/cl430" -vmspx --data_model=restricted -Ooff --use_hw_mpy=F5 --advice:power_severity=suppress --define=__MSP430F5529__ -g --gcc --printf_support=minimal --diag_warning=225 --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"1Lab.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/include" -i"C:/Users/alexm/OneDrive - Worcester Polytechnic Institute (wpi.edu)/College/Courses/A2021/ECE2049/Labs/1Lab/1Lab/lib" -i"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/lib" -i"C:/Development/EmbeddedSystems/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include" -i"C:/Development/EmbeddedSystems/ccs/ccs_base/msp430/lib/5xx_6xx_FRxx" --reread_libs --warn_sections --xml_link_info="1Lab_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "1Lab.out" "./main.obj" "./peripherals.obj" "./LcdDriver/HAL_MSP_EXP430FR5529_Sharp96x96.obj" "./LcdDriver/Sharp96x96.obj" "./fonts/fontfixed6x8.obj" "./images/LPRocket_96x37.obj" "./images/TI_Logo_69x64.obj" "../lnk_msp430f5529.cmd" "../lib/grlib.lib"  -llibc.a -llibmath.a 
+<Linking>
+Finished building target: "1Lab.out"
+ 
+
+**** Build Finished ****
