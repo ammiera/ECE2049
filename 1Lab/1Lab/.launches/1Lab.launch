@@ -4,7 +4,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="${build_artifact:1Lab}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="1Lab"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:1Lab}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="C:\Users\alexm\OneDrive - Worcester Polytechnic Institute (wpi.edu)\College\Courses\A2021\ECE2049\Labs\1Lab\1Lab\Debug\1Lab.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="C:\Users\alexm\OneDrive - Worcester Polytechnic Institute (wpi.edu)\College\Courses\A2021\ECE2049\Labs\ECE2049\1Lab\1Lab\Debug\1Lab.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/1Lab"/>
 </listAttribute>
