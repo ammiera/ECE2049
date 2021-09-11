@@ -14,6 +14,8 @@ int main (int argc, char *argv[]) {
     enum ret_codes rc; /* declares return codes */
     int (* state_fun)(void); /* declares state function pointer */
 
+    srand(time(0));
+
     initLeds();
     configDisplay();
     configKeypad();
@@ -27,26 +29,31 @@ int main (int argc, char *argv[]) {
     /* while there is no error in the game */
     while (cur_state != end) {
         switch(cur_state) {
-        case entry:
-            rc = entry_state();
-            if (rc == repeat) {
-                cur_state = entry;
-            } else if (rc == pass) {
-                cur_state = game;
-            } else {
-                cur_state = end;
-            }
-            break;
         case game:
             rc = game_state();
             if (rc == repeat) {
                 cur_state = game;
+                break;
             } else if (rc == pass) {
                 cur_state = entry;
+                break;
             } else {
                 cur_state = end;
+                break;
             }
-            break;
+
+        case entry:
+            rc = entry_state();
+            if (rc == repeat) {
+                cur_state = entry;
+                break;
+            } else if (rc == pass) {
+                cur_state = game;
+                break;
+            } else {
+                cur_state = end;
+                break;
+            }
         }
     }
 
@@ -75,7 +82,7 @@ int main (int argc, char *argv[]) {
 /* welcome screen state */
 int entry_state(void) {
     enum ret_codes rc;
-    rc = check_keypad();
+    rc = check_keypad_welcome();
     if (rc == pass) {
         initiate_countdown();
     }
@@ -85,47 +92,12 @@ int entry_state(void) {
 
 /* game screen state */
 int game_state(void) {
-    int game_exit_state;
+    enum ret_codes rc;
+    rc = check_keypad_game();
 
-    /*
-    int is_gameover = 0;
+    //display_message("Help me"); //Place holder for aliens
 
-    while (!is_gameover)
-    {
-        enum game_codes game_state;
-
-        switch (game_state)
-        {
-            case draw:
-                draw_aliens();
-                game_state = check
-                break;
-            case check:
-                is_pressed = check_keypad();
-                if (is_pressed) {
-                    game_state = update;
-                    break;
-                } else {
-                    game_state = draw;
-                    break;
-                }
-            case update:
-                update_aliens();
-                game_state = draw;
-                break;
-            case restart:
-                is_gameover = 1;
-                exit_state = pass;
-                break;
-            case error:
-                is_gameover = 1;
-                exit_state = fail;
-                break;
-        }
-    }
-    */
-    game_exit_state = fail;
-    return game_exit_state;
+    return rc;
 }
 
 /* fail state */
