@@ -109,16 +109,16 @@ enum state_codes check_keypad_welcome(void) {
 
 enum state_codes check_keypad_game(float counter) {
     unsigned char currKey = 0;
-    int i = 0;
+    int i = 5;
     enum ret_codes rc;
 
     currKey = getKey();
     if (currKey == '#') {
-        while(rc != fail)
+        for(i = 5; i < 100000 ; i + 20 )
         {
             Graphics_clearDisplay(&g_sContext); // Clear the display
             rc = display_aliens(i);
-            timeDelay(1);
+            timeDelay(0.0000001);
             i++;
         }
     }
