@@ -1,12 +1,12 @@
 #ifndef HELPERS_H_
 #define HELPERS_H_
 
+enum ret_codes check_keypad(void);
+void display_welcome_screen(void);
+enum ret_codes display_aliens(enum speeds speed, unsigned int y);
+int gen_rand_int(void);
 void display_message(char* message);
 void initiate_countdown(void);
 void timeDelay(char numLoops);
-unsigned char randNumGen (int numOfLoops, unsigned char *numInArray);
-enum state_codes check_keypad(void);
-void draw_border(void);
-enum ret_codes display_aliens(int y);
 
 #endif /* HELPERS_H_ */

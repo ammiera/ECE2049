@@ -1,60 +1,135 @@
 /* derived from https://stackoverflow.com/questions/1371460/state-machines-tutorials/1371654#1371654 */
 
 #include "states.h"
+#include "helpers.h"
+#include <msp430.h>
+#include "peripherals.h"
 
 #define EXIT_SUCCESS 0
-#define NUM_TRANSITIONS 5
+#define MAX_LEVELS 5;
 
-int main (int argc, char *argv[]) {
+enum ret_codes intro_state(void) {
+    display_welcome_screen();
+    return pass;
+}
 
-    WDTCTL = WDTPW | WDTHOLD;    // Stop watchdog timer. Always need to stop this!!
-                                 // You can then configure it properly, if desired
 
-    enum state_codes cur_state = entry; /* starts the game */
+
+enum ret_codes waiting_state(void) {
+    enum ret_codes rc;
+    rc = check_keypad();
+
+    if (rc == pass) {
+        initiate_countdown();
+    }
+
+    return rc;
+}
+
+
+enum ret_codes game_state(int level) {
+    enum ret_codes rc = pass;
+    enum speeds speed;
+    unsigned int i = 5;
+
+    switch(level) {
+        case 0:
+            speed = slowest;
+            break;
+        case 1:
+            speed = slow;
+            break;
+        case 2:
+            speed = medium;
+            break;
+        case 3:
+            speed = fast;
+            break;
+        case 4:
+            speed = fastest;
+            break;
+    }
+
+    while(rc != repeat)
+    {
+        rc = display_aliens(speed, i);
+        i++;
+    }
+
+    return rc;
+}
+
+
+
+enum ret_codes exit_state(void) {
+    display_message("Game failed :(");
+    return fail;
+}
+
+
+
+void main (void) {
+
+    WDTCTL = WDTPW | WDTHOLD; /* stops watchdog timer. Always need to stop this!! */
+
+    enum state_codes cur_state = intro; /* starts the game */
     enum ret_codes rc; /* declares return codes */
-    int (* state_fun)(void); /* declares state function pointer */
+    unsigned int level = 0;
 
     srand(time(0));
 
+    /* initializes board */
     initLeds();
     configDisplay();
     configKeypad();
 
-    display_message("Welcome");
-    timeDelay(1);
-    display_message("To");
-    timeDelay(1);
-    display_message("Space Invaders!");
-
-    /* while there is no error in the game */
+    /* checks that the game only runs when an error has not occured */
     while (cur_state != end) {
-        switch(cur_state) {
-        case game:
-            rc = game_state();
-            if (rc == repeat) {
-                cur_state = game;
-                break;
-            } else if (rc == pass) {
-                cur_state = entry;
-                break;
-            } else {
-                cur_state = end;
-                break;
-            }
 
-        case entry:
-            rc = entry_state();
-            if (rc == repeat) {
-                cur_state = entry;
-                break;
-            } else if (rc == pass) {
-                cur_state = game;
-                break;
-            } else {
-                cur_state = end;
-                break;
+        switch(cur_state) {
+            case intro:
+                // display_message("intro");
+                rc = intro_state();
+                if (rc == pass) {
+                    cur_state = waiting;
+                    break;
+                } else {
+                    cur_state = end;
+                    break;
+                }
+
+            case waiting:
+                // display_message("waiting");
+                rc = waiting_state();
+                if (rc == repeat) {
+                    cur_state = waiting;
+                    break;
+                } else if (rc == pass) {
+                    cur_state = game;
+                    break;
+                } else {
+                    cur_state = end;
+                    break;
+                }
+
+            case game:
+                // display_message("game");
+                rc = game_state(level);
+                if (rc == repeat) {
+                    if (level < 5)
+                    {
+                        cur_state = game;
+                        level ++;
+                    } else {
+                        cur_state = intro;
+                    }
+                    break;
+
+                } else {
+                    cur_state = end;
+                    break;
+                }
             }
-        }
     }
 
     return EXIT_SUCCESS;
@@ -78,30 +153,3 @@ int main (int argc, char *argv[]) {
    Graphics_Rectangle box = {.xMin = 0, .xMax = 95, .yMin = 0, .yMax = 95 };
    Graphics_drawRectangle(&g_sContext, &box);
    */
-
-/* welcome screen state */
-int entry_state(void) {
-    enum ret_codes rc;
-    rc = check_keypad_welcome();
-    if (rc == pass) {
-        initiate_countdown();
-    }
-
-    return rc;
-}
-
-/* game screen state */
-int game_state(void) {
-    enum ret_codes rc;
-    rc = check_keypad_game();
-
-    //display_message("Help me"); //Place holder for aliens
-
-    return rc;
-}
-
-/* fail state */
-int exit_state(void) {
-    return fail;
-}
-

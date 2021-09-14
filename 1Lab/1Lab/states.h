@@ -1,41 +1,13 @@
 #ifndef STATES_H
 #define STATES_H
 
-#include <msp430.h>
+enum state_codes { intro, waiting, game, end}; /* key words for states */
+enum ret_codes { pass, fail, repeat }; /* key words for return codes */
+enum speeds {slowest = 4, slow = 3, medium = 2, fast = 2, fastest = 1}; /* speeds at which aliens fall from the screen */
 
-/* Peripherals.c and .h are where the functions that implement
- * the LEDs and keypad, etc are. It is often useful to organize
- * your code by putting like functions together in files.
- * You include the header associated with that file(s)
- * into the main file of your project. */
-#include "peripherals.h"
-#include "helpers.h"
-
-enum game_codes { draw, check, update, restart, error}; /* key words for game states */
-enum state_codes { entry, game, end}; /* key words for states */
-enum ret_codes { pass, fail, repeat}; /* key words for return codes */
-
-/* defines the transition structure */
-/*
-struct transition {
-    enum state_codes src_state;
-    enum ret_codes   ret_code;
-    enum state_codes dst_state;
-};
-*/
-
-/* shows how each source state and its return code effect the destination state */
-/*
-struct transition state_transitions[] = {
-    {entry, repeat, entry}, /* stays in welcome screen */
-    //{entry, pass,   game}, /* starts game */
-    //{entry, fail,   end}, /* ends the game due to a failure in the code */
-    //{game,  pass,   entry}, /* restarts the game */
-    //{game,  fail,   end} /* ends the game due to a failure in the code */
-//};
-
-int exit_state(void);
-int game_state(void);
-int entry_state(void);
+enum ret_codes entry_state(void);
+enum ret_codes waiting_state(void);
+enum ret_codes game_state(int level);
+enum ret_codes exit_state(void);
 
 #endif
