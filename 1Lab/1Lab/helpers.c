@@ -30,19 +30,17 @@ void display_welcome_screen(void) {
 
 }
 
-enum ret_codes display_aliens(enum speeds speed, unsigned int y) {
+enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens) {
     int x = 0;
-    int num_aliens = gen_rand_int();
 
     Graphics_clearDisplay(&g_sContext); // clears the display
 
     for (x = 0; x < num_aliens; x++) {
         Graphics_drawStringCentered(&g_sContext, "D", AUTO_STRING_LENGTH, (14 + x*17), y, TRANSPARENT_TEXT);
-
     }
 
     Graphics_flushBuffer(&g_sContext);
-    timeDelay(speed/4);
+    timeDelay(0.8);
 
     if (y > 90) {
         return repeat;
@@ -51,7 +49,7 @@ enum ret_codes display_aliens(enum speeds speed, unsigned int y) {
     }
 }
 
-int gen_rand_int(void) {
+unsigned int gen_rand_int(void) {
     return (rand() %5 + 1);
 }
 

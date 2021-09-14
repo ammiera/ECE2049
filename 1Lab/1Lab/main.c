@@ -30,7 +30,8 @@ enum ret_codes waiting_state(void) {
 enum ret_codes game_state(int level) {
     enum ret_codes rc = pass;
     enum speeds speed;
-    unsigned int i = 5;
+    unsigned int height = 0;
+    unsigned int num_aliens = gen_rand_int();
 
     switch(level) {
         case 0:
@@ -52,8 +53,8 @@ enum ret_codes game_state(int level) {
 
     while(rc != repeat)
     {
-        rc = display_aliens(speed, i);
-        i++;
+        rc = display_aliens(height, num_aliens);
+        height = height + speed;
     }
 
     return rc;
@@ -119,7 +120,7 @@ void main (void) {
                     if (level < 5)
                     {
                         cur_state = game;
-                        level ++;
+                        level++;
                     } else {
                         cur_state = intro;
                     }
