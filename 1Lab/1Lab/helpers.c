@@ -40,7 +40,7 @@ enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens) {
     }
 
     Graphics_flushBuffer(&g_sContext);
-    timeDelay(0.8);
+    timeDelay(1);
 
     if (y > 90) {
         return repeat;

@@ -75,7 +75,7 @@ void main (void) {
 
     enum state_codes cur_state = intro; /* starts the game */
     enum ret_codes rc; /* declares return codes */
-    unsigned int level = 0;
+    unsigned int level;
 
     srand(time(0));
 
@@ -92,6 +92,7 @@ void main (void) {
                 // display_message("intro");
                 rc = intro_state();
                 if (rc == pass) {
+                    level = 0;
                     cur_state = waiting;
                     break;
                 } else {
