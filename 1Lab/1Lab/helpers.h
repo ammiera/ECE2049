@@ -12,6 +12,8 @@ char gen_rand_char(void);
 void gen_rand_aliens(char* aliens, unsigned int num_aliens);
 void kill_alien_scum(char* aliens);
 unsigned int gen_rad_sound(void);
+void setLeds(void);
+void end_game(void);
 
 
 #endif /* HELPERS_H_ */

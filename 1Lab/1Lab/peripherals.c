@@ -36,6 +36,7 @@ void initLeds(void)
     P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
 }
 
+/*
 void setLeds(unsigned char state)
 {
     // Turn on 4 colored LEDs on P6.1-6.4 to match the hex value
@@ -65,7 +66,7 @@ void setLeds(unsigned char state)
         mask |= BIT2;   // Left most LED on P6.2
     P6OUT |= mask;
 }
-
+*/
 
 /*
  * Enable a PWM-controlled buzzer on P3.5

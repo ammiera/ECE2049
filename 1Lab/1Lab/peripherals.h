@@ -67,7 +67,7 @@ extern tContext g_sContext;	// user defined type used by graphics library
 //void DACSetValue(unsigned int dac_code);
 //void setupSPI_DAC(void);
 void initLeds(void);
-void setLeds(unsigned char state);
+// void setLeds(unsigned char state);
 
 void configDisplay(void);
 void BuzzerOn(unsigned int sound);

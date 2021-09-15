@@ -65,18 +65,55 @@ enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens, char* ali
     }
 
     if (y > 90) {
-        display_message("You Suck");
-        timeDelay(2);
-        display_message("Try Again?");
-        timeDelay(2);
+        end_game();
         return lose;
     } else if (state == 1) {
-        display_message("Next Level");
-        timeDelay(2);
         return repeat;
     } else {
         return pass;
     }
+}
+
+void end_game(void) {
+    unsigned char mask = 0;
+
+    // Turn all LEDs off to start
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
+
+    mask |= BIT4;   // Right most LED P6.4
+    BuzzerOn(140);
+    display_message("You Suck");
+    timeDelay(1);
+    BuzzerOff();
+    P6OUT |= mask;
+
+    mask |= BIT3;   // next most right LED P.3
+    BuzzerOn(180);
+    display_message("Try Again?");
+    timeDelay(1);
+    BuzzerOff();
+    P6OUT |= mask;
+
+    mask |= BIT1;   // third most left LED P6.1
+    BuzzerOn(220);
+    timeDelay(1);
+    BuzzerOff();
+    P6OUT |= mask;
+
+    mask |= BIT2;   // Left most LED on P6.2
+    BuzzerOn(260);
+    timeDelay(1);
+    BuzzerOff();
+    P6OUT |= mask;
+    timeDelay(1);
+
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
+
+}
+
+
+void blink(void) {
+
 }
 
 void kill_alien_scum(char* aliens) {

@@ -137,7 +137,11 @@ void main (void) {
                     {
                         cur_state = game;
                         level++;
+                        display_message("Next Level");
+                        timeDelay(2);
                     } else {
+                        display_message("You Win :)");
+                        timeDelay(2);
                         cur_state = intro;
                     }
                     break;
