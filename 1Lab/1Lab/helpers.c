@@ -32,11 +32,15 @@ void display_welcome_screen(void) {
 
 enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens, char* aliens) {
     int x = 0;
+    char alien[2];
 
     Graphics_clearDisplay(&g_sContext); // clears the display
 
     for (x = 0; x < num_aliens; x++) {
-        Graphics_drawStringCentered(&g_sContext, aliens, AUTO_STRING_LENGTH, (14 + x*17), y, TRANSPARENT_TEXT);
+        alien[0] = *aliens;
+        alien[1] = '\0';
+        Graphics_drawStringCentered(&g_sContext, alien, AUTO_STRING_LENGTH, (14 + x*17), y, TRANSPARENT_TEXT);
+        aliens++;
     }
 
     Graphics_flushBuffer(&g_sContext);
@@ -49,6 +53,26 @@ enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens, char* ali
     }
 }
 
+enum columns check_numpad(void) {
+    unsigned char currNum = 0;
+    currNum = getKey();
+
+    if (currNum == '1') {
+
+        return col1;
+    } else if (currNum == '2') {
+        return col2;
+    } else if (currNum == '3') {
+        return col3;
+    } else if (currNum == '4') {
+        return col4;
+    } else if (currNum == '5') {
+        return col5;
+    } else {
+        return NULL;
+    }
+}
+
 unsigned int gen_rand_int(void) {
     return (rand() %5 + 1);
 }
@@ -56,6 +80,16 @@ unsigned int gen_rand_int(void) {
 char gen_rand_char(void) {
     char random_char = 'A' + (rand() % 26);
     return random_char;
+}
+
+void gen_rand_aliens(char* aliens, unsigned int num_aliens) {
+    unsigned int i = 0;
+
+    for(i = 0; i < num_aliens; i++) {
+        aliens[i] = gen_rand_char();
+    }
+
+    aliens[num_aliens] = '\0';
 }
 
 void display_message(char* message) {
