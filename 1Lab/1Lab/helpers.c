@@ -82,45 +82,46 @@ enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens, char* ali
 void kill_alien_scum(char* aliens) {
     unsigned char currNum = 0;
     currNum = getKey();
+    unsigned int rand_int = gen_rad_sound();
 
     if (currNum == '1') {
         aliens += (col1 - 1);
-        BuzzerOn(255);
-        timeDelay(0.5);
-        BuzzerOff();
         *aliens = '\0';
+        BuzzerOn(rand_int);
+        timeDelay(1);
+        BuzzerOff();
     }
 
     if (currNum == '2') {
         aliens += (col2 - 1);
-        BuzzerOn(255);
-        timeDelay(0.5);
-        BuzzerOff();
         *aliens = '\0';
+        BuzzerOn(rand_int);
+        timeDelay(1);
+        BuzzerOff();
     }
 
     if (currNum == '3') {
         aliens += (col3 - 1);
-        BuzzerOn(255);
-        timeDelay(0.5);
-        BuzzerOff();
         *aliens = '\0';
+        BuzzerOn(rand_int);
+        timeDelay(1);
+        BuzzerOff();
     }
 
     if (currNum == '4') {
         aliens += (col4 - 1);
-        BuzzerOn(255);
-        timeDelay(0.5);
-        BuzzerOff();
         *aliens = '\0';
+        BuzzerOn(rand_int);
+        timeDelay(1);
+        BuzzerOff();
     }
 
     if (currNum == '5') {
         aliens += (col5 - 1);
-        BuzzerOn(255);
-        timeDelay(0.5);
-        BuzzerOff();
         *aliens = '\0';
+        BuzzerOn(rand_int);
+        timeDelay(1);
+        BuzzerOff();
     }
 }
 
@@ -133,7 +134,7 @@ unsigned int gen_rad_sound(void) {
 }
 
 char gen_rand_char(void) {
-    char random_char = 'A' + (rand() % 26);
+    char random_char = 'A' + (rand() % 100);
     return random_char;
 }
 
@@ -162,19 +163,19 @@ void initiate_countdown(void) {
     //The Count Down at the start of a new Game
      display_message("3");
      timeDelay(1);
-     BuzzerOn(127);
+     BuzzerOn(200);
      timeDelay(1);
      BuzzerOff();
 
      display_message("2");
      timeDelay(1);
-     BuzzerOn(127);
+     BuzzerOn(150);
      timeDelay(1);
      BuzzerOff();
 
      display_message("1");
      timeDelay(1);
-     BuzzerOn(127);
+     BuzzerOn(100);
      timeDelay(1);
      BuzzerOff();
 }

@@ -71,6 +71,7 @@ enum ret_codes game_state(int level) {
         }
     }
 
+    free(aliens);
     return rc;
 }
 
