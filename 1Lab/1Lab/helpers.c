@@ -46,7 +46,30 @@ enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens, char* ali
     Graphics_flushBuffer(&g_sContext);
     timeDelay(1);
 
+    unsigned int i;
+    unsigned int state = 0;
+
+    aliens = aliens - num_aliens;
+
+    for (i = 0; i < num_aliens; i++) {
+        if (*aliens == '\0') {
+            state = 1; // this alien is dead
+        }
+
+        if (*aliens != '\0') {
+            state = 0; // this alien is still present
+            break;
+        }
+
+        aliens++;
+    }
+
     if (y > 90) {
+        display_message("You Suck");
+        timeDelay(2);
+        display_message("Try Again?");
+        return lose;
+    } else if (state == 1) {
         return repeat;
     } else {
         return pass;

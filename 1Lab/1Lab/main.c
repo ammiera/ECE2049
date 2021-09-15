@@ -56,13 +56,20 @@ enum ret_codes game_state(int level) {
             break;
     }
 
-    while(rc != repeat)
+    while(1)
     {
         kill_alien_scum(aliens);
         rc = display_aliens(height, num_aliens, aliens);
         height = height + speed;
+
+        if (rc == repeat) {
+            break;
+        }
+
+        if (rc == lose) {
+            break;
+        }
     }
-    display_message("Nachster Schritt");
     timeDelay(5);
 
     return rc;
@@ -135,6 +142,8 @@ void main (void) {
                     }
                     break;
 
+                } else if (rc == lose) {
+                    cur_state = intro;
                 } else {
                     cur_state = end;
                     break;

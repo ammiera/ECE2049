@@ -2,7 +2,7 @@
 #define STATES_H
 
 enum state_codes { intro, waiting, game, end}; /* key words for states */
-enum ret_codes { pass, fail, repeat }; /* key words for return codes */
+enum ret_codes { pass, fail, repeat, lose}; /* key words for return codes */
 enum speeds {slowest = 5, slow = 9, medium = 13, fast = 16, fastest = 20}; /* speeds at which aliens fall from the screen */
 enum columns {col1 = 1, col2 = 2, col3 = 3, col4 = 4, col5 = 5}; /* specifies the column based on the keypad input */
 
