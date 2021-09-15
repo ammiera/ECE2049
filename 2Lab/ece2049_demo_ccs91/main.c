@@ -15,17 +15,21 @@ void main(void)
                                  // You can then configure it properly, if desired
 
     unsigned char button_state;
+    unsigned char state;
 
+    configDisplay();
     config_buttons();
-    // config_userLED();
 
-//      Graphics_clearDisplay(&g_sContext); // clear the display
-     // Graphics_drawStringCentered(&g_sContext, "Lab 2", AUTO_STRING_LENGTH, 48, 15, TRANSPARENT_TEXT); // write to display
-      // Graphics_flushBuffer(&g_sContext); // flush
+    //config_userLED();
+
+    Graphics_clearDisplay(&g_sContext); // clear the display
+    Graphics_drawStringCentered(&g_sContext, "Lab 2", AUTO_STRING_LENGTH, 48, 15, TRANSPARENT_TEXT); // write to display
+    Graphics_flushBuffer(&g_sContext); // flush
+
     while (1)
     {
         button_state = get_button_state();
-        printf("%c", button_state);
+        state = P7IN;
 
     }  // end while (1)
 }
