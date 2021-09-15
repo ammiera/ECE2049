@@ -11,6 +11,7 @@ void timeDelay(char numLoops);
 char gen_rand_char(void);
 void gen_rand_aliens(char* aliens, unsigned int num_aliens);
 void kill_alien_scum(char* aliens);
+unsigned int gen_rad_sound(void);
 
 
 #endif /* HELPERS_H_ */

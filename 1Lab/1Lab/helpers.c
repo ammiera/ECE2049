@@ -68,8 +68,11 @@ enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens, char* ali
         display_message("You Suck");
         timeDelay(2);
         display_message("Try Again?");
+        timeDelay(2);
         return lose;
     } else if (state == 1) {
+        display_message("Next Level");
+        timeDelay(2);
         return repeat;
     } else {
         return pass;
@@ -82,32 +85,51 @@ void kill_alien_scum(char* aliens) {
 
     if (currNum == '1') {
         aliens += (col1 - 1);
+        BuzzerOn(255);
+        timeDelay(0.5);
+        BuzzerOff();
         *aliens = '\0';
     }
 
     if (currNum == '2') {
         aliens += (col2 - 1);
+        BuzzerOn(255);
+        timeDelay(0.5);
+        BuzzerOff();
         *aliens = '\0';
     }
 
     if (currNum == '3') {
         aliens += (col3 - 1);
+        BuzzerOn(255);
+        timeDelay(0.5);
+        BuzzerOff();
         *aliens = '\0';
     }
 
     if (currNum == '4') {
         aliens += (col4 - 1);
+        BuzzerOn(255);
+        timeDelay(0.5);
+        BuzzerOff();
         *aliens = '\0';
     }
 
     if (currNum == '5') {
         aliens += (col5 - 1);
+        BuzzerOn(255);
+        timeDelay(0.5);
+        BuzzerOff();
         *aliens = '\0';
     }
 }
 
 unsigned int gen_rand_int(void) {
     return (rand() %5 + 1);
+}
+
+unsigned int gen_rad_sound(void) {
+    return (rand() %255 + 1);
 }
 
 char gen_rand_char(void) {
@@ -140,19 +162,19 @@ void initiate_countdown(void) {
     //The Count Down at the start of a new Game
      display_message("3");
      timeDelay(1);
-     BuzzerOn();
+     BuzzerOn(127);
      timeDelay(1);
      BuzzerOff();
 
      display_message("2");
      timeDelay(1);
-     BuzzerOn();
+     BuzzerOn(127);
      timeDelay(1);
      BuzzerOff();
 
      display_message("1");
      timeDelay(1);
-     BuzzerOn();
+     BuzzerOn(127);
      timeDelay(1);
      BuzzerOff();
 }

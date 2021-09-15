@@ -31,7 +31,7 @@ enum ret_codes game_state(int level) {
     enum ret_codes rc = pass;
     enum speeds speed;
     enum columns col;
-    unsigned int height = 0;
+    unsigned int height = 3;
     unsigned int num_aliens = gen_rand_int();
     char rand_char = gen_rand_char();
     char *aliens = malloc(sizeof(char) * (num_aliens + 1));
@@ -70,7 +70,6 @@ enum ret_codes game_state(int level) {
             break;
         }
     }
-    timeDelay(5);
 
     return rc;
 }
@@ -153,22 +152,3 @@ void main (void) {
 
     return EXIT_SUCCESS;
 }
-   /*
-   //When an "alien" reaches a Y position of 90, we can consider that as game over.
-   // So we could do an if (alien.y >= 90) { disp("Failure, loser")}
-   Graphics_drawStringCentered(&g_sContext, "Z", AUTO_STRING_LENGTH, 92, 90, TRANSPARENT_TEXT);
-   Graphics_drawStringCentered(&g_sContext, "A", AUTO_STRING_LENGTH, 5, 5, TRANSPARENT_TEXT);
-
-   //Use these X values for the position of the columns
-   Graphics_drawStringCentered(&g_sContext, "D", AUTO_STRING_LENGTH, 14, 15, TRANSPARENT_TEXT);
-   Graphics_drawStringCentered(&g_sContext, "E", AUTO_STRING_LENGTH, 31, 15, TRANSPARENT_TEXT);
-   Graphics_drawStringCentered(&g_sContext, "F", AUTO_STRING_LENGTH, 48, 15, TRANSPARENT_TEXT);
-   Graphics_drawStringCentered(&g_sContext, "G", AUTO_STRING_LENGTH, 65, 15, TRANSPARENT_TEXT);
-   Graphics_drawStringCentered(&g_sContext, "H", AUTO_STRING_LENGTH, 82, 15, TRANSPARENT_TEXT);
-   //The border of usable space is (
-
-   // Draw a box around everything because it looks nice
-   // Creates a one pixel border around the board. (0, 0) is the top left, (95, 95) is the bottom right.
-   Graphics_Rectangle box = {.xMin = 0, .xMax = 95, .yMin = 0, .yMax = 95 };
-   Graphics_drawRectangle(&g_sContext, &box);
-   */
