@@ -30,6 +30,7 @@ enum ret_codes waiting_state(void) {
 enum ret_codes game_state(int level) {
     enum ret_codes rc = pass;
     enum speeds speed;
+    enum columns col;
     unsigned int height = 0;
     unsigned int num_aliens = gen_rand_int();
     char rand_char = gen_rand_char();
@@ -57,6 +58,7 @@ enum ret_codes game_state(int level) {
 
     while(rc != repeat)
     {
+        kill_alien_scum(aliens);
         rc = display_aliens(height, num_aliens, aliens);
         height = height + speed;
     }

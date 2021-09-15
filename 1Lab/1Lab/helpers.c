@@ -53,23 +53,33 @@ enum ret_codes display_aliens(unsigned int y, unsigned int num_aliens, char* ali
     }
 }
 
-enum columns check_numpad(void) {
+void kill_alien_scum(char* aliens) {
     unsigned char currNum = 0;
     currNum = getKey();
 
     if (currNum == '1') {
+        aliens += (col1 - 1);
+        *aliens = '\0';
+    }
 
-        return col1;
-    } else if (currNum == '2') {
-        return col2;
-    } else if (currNum == '3') {
-        return col3;
-    } else if (currNum == '4') {
-        return col4;
-    } else if (currNum == '5') {
-        return col5;
-    } else {
-        return NULL;
+    if (currNum == '2') {
+        aliens += (col2 - 1);
+        *aliens = '\0';
+    }
+
+    if (currNum == '3') {
+        aliens += (col3 - 1);
+        *aliens = '\0';
+    }
+
+    if (currNum == '4') {
+        aliens += (col4 - 1);
+        *aliens = '\0';
+    }
+
+    if (currNum == '5') {
+        aliens += (col5 - 1);
+        *aliens = '\0';
     }
 }
 
@@ -122,8 +132,6 @@ void initiate_countdown(void) {
      BuzzerOn();
      timeDelay(1);
      BuzzerOff();
-
-     // *** GAME SHOULD NOW START - Display "Aliens" ***
 }
 
 void timeDelay(char numLoops) {
