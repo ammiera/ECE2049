@@ -17,9 +17,8 @@ void main(void)
     unsigned char button_state = 0x00;
 
     configDisplay();
-    config_buttons();
-
-    //config_userLED();
+    configButtons();
+    initLeds();
 
     Graphics_clearDisplay(&g_sContext); // clear the display
     Graphics_drawStringCentered(&g_sContext, "Lab 2", AUTO_STRING_LENGTH, 48, 15, TRANSPARENT_TEXT); // write to display
@@ -27,6 +26,8 @@ void main(void)
 
     while (1)
     {
-        button_state = get_button_state();
+        button_state = getButtonState();
+        displayLeds(button_state);
+
     }
 }

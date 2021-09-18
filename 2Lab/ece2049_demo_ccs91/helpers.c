@@ -1,14 +1,17 @@
 #include "helpers.h"
 #include <msp430.h>
 
-/*
 #define S1PRSSD 0x01
-#define S2PRSSD 0x40
+#define S2PRSSD 0x02
 #define S3PRSSD 0x04
-#define S4PRSSD 0x10
-*/
+#define S4PRSSD 0x08
 
-unsigned char get_button_state(void) {
+#define R1REDLED BIT2
+#define R2YELLOWLED BIT1
+#define R3BLUELED BIT3
+#define R4GREENLED BIT4
+
+unsigned char getButtonState(void) {
 
     unsigned char ret_val = 0x00;
 
@@ -32,7 +35,7 @@ unsigned char get_button_state(void) {
     return ret_val;
 }
 
-void config_buttons(void) {
+void configButtons(void) {
     /* configures buttons for IO */
     P7SEL &= ~(BIT4|BIT0);
     P3SEL &= ~(BIT6); // configures button for IO
@@ -55,37 +58,46 @@ void config_buttons(void) {
 }
 
 
-void configUserLED(char inbits) {
+void displayLeds(char button_state) {
     //takes the output of the button state and configures corresponding LEDs to light up
-    //should light up 2 LEDs- does not do that
-    // if hex value = inputed bit
 
     // Turn all LEDs off to start
     P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
 
-    if ((BIT4 & inbits) == 0) {
-    // inbits |= BIT4;   // Right most LED P6.4 //YELLOW LED
-    P6OUT |= BIT4;
-
+    switch (button_state) {
+        case (S1PRSSD):
+            P6OUT |= R1REDLED;
+            break;
+        case (S2PRSSD):
+            P6OUT |= R2YELLOWLED;
+            break;
+        case (S3PRSSD):
+            P6OUT |= R3BLUELED;
+            break;
+        case (S4PRSSD):
+            P6OUT |= R4GREENLED;
+            break;
+        case (S1PRSSD | S2PRSSD):
+            P6OUT |= (R1REDLED | R2YELLOWLED);
+            break;
+        case (S1PRSSD | S3PRSSD):
+            P6OUT |= (R1REDLED | R3BLUELED);
+            break;
+        case (S1PRSSD | S4PRSSD):
+            P6OUT |= (R1REDLED | R4GREENLED);
+            break;
+        case (S2PRSSD | S3PRSSD):
+            P6OUT |= (R2YELLOWLED | R3BLUELED);
+            break;
+        case (S2PRSSD | S4PRSSD):
+            P6OUT |= (R2YELLOWLED | R4GREENLED);
+            break;
+        case (S3PRSSD | S4PRSSD):
+            P6OUT |= (R3BLUELED | R4GREENLED);
+            break;
+        default:
+            P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
     }
-
-    if (( BIT3 & inbits) == 0) {
-    //  inbits |= BIT3;   //LED that is one in from far right P6.3 //BLUE LED
-    P6OUT |= BIT3;
-    }
-
-    if((BIT1 & inbits) == 0) {
-    // inbits |= BIT1;   // LED that is one in from far left, P6.1 //GREEN LED
-    P6OUT |= BIT1;
-    }
-
-    if ((BIT2 & inbits) == 0) {
-    // inbits |= BIT2;   // Left most LED on P6.2 // RED LED
-    P6OUT |= BIT2;
-    }
-
-    timeDelay(1);
-    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
 }
 
 

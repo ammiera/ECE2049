@@ -1,8 +1,8 @@
 #ifndef HELPERS_H_
 #define HELPERS_H_
 
-void config_userLED(char inbits);
-void config_buttons(void);
-unsigned char gete_button_state(void);
+unsigned char getButtonState(void);
+void configButtons(void);
+void displayLeds(char button_state);
 
 #endif /* HELPERS_H_ */
