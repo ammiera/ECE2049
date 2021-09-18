@@ -14,8 +14,7 @@ void main(void)
     WDTCTL = WDTPW | WDTHOLD;    // Stop watchdog timer. Always need to stop this!!
                                  // You can then configure it properly, if desired
 
-    unsigned char button_state;
-    unsigned char state;
+    unsigned char button_state = 0x00;
 
     configDisplay();
     config_buttons();
@@ -29,7 +28,5 @@ void main(void)
     while (1)
     {
         button_state = get_button_state();
-        state = P7IN;
-
-    }  // end while (1)
+    }
 }

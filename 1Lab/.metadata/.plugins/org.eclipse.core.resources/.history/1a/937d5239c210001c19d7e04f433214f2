@@ -1,0 +1,53 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CMD_SRCS += \
+../lnk_msp430f5529.cmd 
+
+C_SRCS += \
+../demo.c \
+../helper.c \
+../main.c \
+../peripherals.c \
+../states.c 
+
+C_DEPS += \
+./demo.d \
+./helper.d \
+./main.d \
+./peripherals.d \
+./states.d 
+
+OBJS += \
+./demo.obj \
+./helper.obj \
+./main.obj \
+./peripherals.obj \
+./states.obj 
+
+OBJS__QUOTED += \
+"demo.obj" \
+"helper.obj" \
+"main.obj" \
+"peripherals.obj" \
+"states.obj" 
+
+C_DEPS__QUOTED += \
+"demo.d" \
+"helper.d" \
+"main.d" \
+"peripherals.d" \
+"states.d" 
+
+C_SRCS__QUOTED += \
+"../demo.c" \
+"../helper.c" \
+"../main.c" \
+"../peripherals.c" \
+"../states.c" 
+
+

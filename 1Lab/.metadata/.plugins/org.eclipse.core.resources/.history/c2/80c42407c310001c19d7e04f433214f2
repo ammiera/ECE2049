@@ -1,0 +1,79 @@
+#include "states.h"
+
+int entry_state(void) {
+    display_text("Welcome to the game");
+
+    /*
+    is_pressed = check_keypad();
+
+    if (is_pressed) {
+        play_intro_music();
+        return pass;
+    } else {
+        return repeat;
+    }
+    */
+
+    return fail; 
+}
+
+int game_state(void) {
+    int exit_state;
+    
+    /*
+    int is_gameover = 0;
+
+    while (!is_gameover)
+    {
+        enum game_codes game_state;
+
+        switch (game_state)
+        {
+            case draw:
+                draw_aliens();
+                game_state = check
+                break;
+            case check:
+                is_pressed = check_keypad();
+                if (is_pressed) {
+                    game_state = update;
+                    break;
+                } else {
+                    game_state = draw;
+                    break;
+                }
+            case update:
+                update_aliens();
+                game_state = draw;
+                break;
+            case restart:
+                is_gameover = 1;
+                exit_state = pass;
+                break;
+            case error:
+                is_gameover = 1;
+                exit_state = fail;
+                break;
+        }
+    }
+    */
+    exit_state = fail;
+    return exit_state;
+}
+
+int exit_state(void) {
+    display_text("Space invaders failed, come back again later");
+}
+
+enum state_codes lookup_transitions (enum state_codes cur_state, enum ret_codes rc) {
+    /* determines next state based on the current state and its transition */
+    int i;
+    for ( i = 0; i < NUM_TRANSITIONS; i++) {
+        if (state_transitions[i].src_state == cur_state && 
+            state_transitions[i].ret_code == rc) {
+            
+            return state_transitions[i].dst_state; /* next state was found */
+        }
+    }
+    return end; /* next state was not found */
+}

@@ -1,0 +1,78 @@
+# FIXED
+
+helper.obj: ../helper.c
+helper.obj: R:/ECE2049_Labs/1Lab/Lab1/helper.h
+helper.obj: R:/ECE2049_Labs/1Lab/Lab1/peripherals.h
+helper.obj: C:/ti/ccs1040/ccs/ccs_base/msp430/include/msp430.h
+helper.obj: C:/ti/ccs1040/ccs/ccs_base/msp430/include/msp430f5529.h
+helper.obj: C:/ti/ccs1040/ccs/ccs_base/msp430/include/in430.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics_legacy_undefs.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdint.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_ti_config.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/linkage.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_stdint40.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/stdint.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/cdefs.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_types.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_types.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_stdint.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_stdint.h
+helper.obj: R:/ECE2049_Labs/1Lab/Lab1/grlib/grlib.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdbool.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/assert.h
+helper.obj: R:/ECE2049_Labs/1Lab/Lab1/LcdDriver/Sharp96x96.h
+helper.obj: R:/ECE2049_Labs/1Lab/Lab1/LcdDriver/HAL_MSP_EXP430FR5529_Sharp96x96.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdio.h
+helper.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdarg.h
+
+../helper.c:
+
+R:/ECE2049_Labs/1Lab/Lab1/helper.h:
+
+R:/ECE2049_Labs/1Lab/Lab1/peripherals.h:
+
+C:/ti/ccs1040/ccs/ccs_base/msp430/include/msp430.h:
+
+C:/ti/ccs1040/ccs/ccs_base/msp430/include/msp430f5529.h:
+
+C:/ti/ccs1040/ccs/ccs_base/msp430/include/in430.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics_legacy_undefs.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdint.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_ti_config.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/linkage.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_stdint40.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/stdint.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/cdefs.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_types.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_types.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_stdint.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_stdint.h:
+
+R:/ECE2049_Labs/1Lab/Lab1/grlib/grlib.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdbool.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/assert.h:
+
+R:/ECE2049_Labs/1Lab/Lab1/LcdDriver/Sharp96x96.h:
+
+R:/ECE2049_Labs/1Lab/Lab1/LcdDriver/HAL_MSP_EXP430FR5529_Sharp96x96.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdio.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdarg.h:
+
