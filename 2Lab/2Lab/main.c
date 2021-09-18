@@ -23,6 +23,7 @@ enum ret_codes game_state(void) {
     enum ret_codes rc = repeat;
 
     displayMessage("Game");
+    playSong();
     button_state = getButtonState();
     displayLeds(button_state);
 

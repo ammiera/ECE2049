@@ -11,7 +11,7 @@
 #define Cnorm 523
 #define Csharp 554
 #define D 587
-#define Eflat 622
+#define Eb 622
 #define E 659
 #define F 698
 #define Fsharp 740
@@ -134,6 +134,17 @@ void displayMessage(char* message) {
 }
 
 void displayIntroMessage(void) {
+    Graphics_clearDisplay(&g_sContext); // clears the display
+
+    // writes welcome message
+    Graphics_drawStringCentered(&g_sContext, "Welcome to", AUTO_STRING_LENGTH, 48, 15, TRANSPARENT_TEXT);
+    Graphics_drawStringCentered(&g_sContext, "Guitar Hero!", AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
+
+    //writes the message to press the '#' to start
+    Graphics_drawStringCentered(&g_sContext, "Press * to play", AUTO_STRING_LENGTH, 48, 45, TRANSPARENT_TEXT);
+
+    // flushes text to the display
+    Graphics_flushBuffer(&g_sContext);
 }
 
 void displayCountdown(void) {
@@ -146,6 +157,59 @@ enum ret_codes check_keypad(void) {
             return pass;
     } else {
             return repeat;
+    }
+}
+
+void playNote(unsigned int sound) {
+    // Initialize PWM output on P3.5, which corresponds to TB0.5
+    P3SEL |= BIT5; // Select peripheral output mode for P3.5
+    P3DIR |= BIT5;
+
+    TB0CTL  = (TBSSEL__ACLK|ID__1|MC__UP);  // Configure Timer B0 to use ACLK, divide by 1, up mode
+    TB0CTL  &= ~TBIE;                       // Explicitly Disable timer interrupts for safety
+
+    // Now configure the timer period, which controls the PWM period
+    // Doing this with a hard coded values is NOT the best method
+    // We do it here only as an example. You will fix this in Lab 2.
+    TB0CCR0 = sound;                    // Set the PWM period in ACLK ticks
+    TB0CCTL0 &= ~CCIE;                  // Disable timer interrupts
+
+    // Configure CC register 5, which is connected to our PWM pin TB0.5
+    TB0CCTL5  = OUTMOD_7;                   // Set/reset mode for PWM
+    TB0CCTL5 &= ~CCIE;                      // Disable capture/compare interrupts
+    TB0CCR5   = TB0CCR0/2;                  // Configure a 50% duty cycle
+}
+
+void stopPlayingNote(void)
+{
+    // Disable both capture/compare periods
+    TB0CCTL0 = 0;
+    TB0CCTL5 = 0;
+}
+
+void playSong(void) {
+    unsigned int i = 0;
+    int song[] = {20, 50, 80, 110, 140, 170, 200, 300, 400, 500, 600, 0};
+
+    while(song[i] != 0) {
+        playNote(song[i]);
+        timeDelay(1);
+        stopPlayingNote();
+        timeDelay(1);
+
+        i++;
+    }
+}
+
+void timeDelay(unsigned int numLoops) {
+    /* Determines the number of times that the main loop has iterated through,
+     *  Returns void, but also a time delay */
+    volatile unsigned int i,j;  // volatile to prevent removal in optimization
+    for (j=0; j<numLoops; j++)
+    {
+        i = 50000 ;
+        while (i > 0)
+           i--;
     }
 }
 
