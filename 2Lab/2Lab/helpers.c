@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include "peripherals.h"
 
+// defines the pitches
 #define A 440
 #define Bflat 466
 #define B 494
-#define C 523
+#define Cnorm 523
 #define Csharp 554
 #define D 587
 #define Eflat 622
@@ -17,33 +18,37 @@
 #define G 784
 #define Aflat 831
 
+// defines the hex values that correspond to the user buttons
 #define S1PRSSD 0x01
 #define S2PRSSD 0x02
 #define S3PRSSD 0x04
 #define S4PRSSD 0x08
 
+
+// defines the LEDs
 #define R1REDLED BIT2
 #define R2YELLOWLED BIT1
 #define R3BLUELED BIT3
 #define R4GREENLED BIT4
 
+/* gets the hex value that corresponds to each user button */
 unsigned char getButtonState(void) {
 
     unsigned char ret_val = 0x00;
 
-    /* checks if S1 has been pressed */
+    // checks if S1 has been pressed
     if ((P7IN & BIT0) == 0x00) {
         ret_val += 0x01;
     }
-    /* checks if S2 has been pressed */
+    // checks if S2 has been pressed
     if ((P3IN & BIT6) == 0x00) {
         ret_val += 0x02;
     }
-    /* checks if S3 has been pressed */
+    // checks if S3 has been pressed
     if ((P2IN & BIT2) == 0x00) {
         ret_val += 0x04;
     }
-    /* checks if S4 has been pressed */
+    // checks if S4 has been pressed
     if ((P7IN & BIT4) == 0x00) {
         ret_val += 0x08;
     }
@@ -51,6 +56,7 @@ unsigned char getButtonState(void) {
     return ret_val;
 }
 
+/* configures buttons for input */
 void configButtons(void) {
     /* configures buttons for IO */
     P7SEL &= ~(BIT4|BIT0);
@@ -125,6 +131,12 @@ void displayMessage(char* message) {
 
     // flushes text to the display
     Graphics_flushBuffer(&g_sContext);
+}
+
+void displayIntroMessage(void) {
+}
+
+void displayCountdown(void) {
 }
 
 enum ret_codes check_keypad(void) {

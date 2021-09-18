@@ -4,7 +4,7 @@
 #include "peripherals.h"
 
 enum ret_codes intro_state(void) {
-    displayMessage("Intro");
+    displayIntroMessage();
 
     return pass;
 }
