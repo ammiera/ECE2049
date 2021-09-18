@@ -4,6 +4,19 @@
 #include <stdlib.h>
 #include "peripherals.h"
 
+#define A 440
+#define Bflat 466
+#define B 494
+#define C 523
+#define Csharp 554
+#define D 587
+#define Eflat 622
+#define E 659
+#define F 698
+#define Fsharp 740
+#define G 784
+#define Aflat 831
+
 #define S1PRSSD 0x01
 #define S2PRSSD 0x02
 #define S3PRSSD 0x04
@@ -103,7 +116,7 @@ void displayLeds(char button_state) {
     }
 }
 
-void display_message(char* message) {
+void displayMessage(char* message) {
 
     Graphics_clearDisplay(&g_sContext); // clears the display
 

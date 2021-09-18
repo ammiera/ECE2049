@@ -4,7 +4,7 @@
 #include "peripherals.h"
 
 enum ret_codes intro_state(void) {
-    display_message("Intro");
+    displayMessage("Intro");
 
     return pass;
 }
@@ -12,7 +12,6 @@ enum ret_codes intro_state(void) {
 enum ret_codes waiting_state(void) {
     enum ret_codes rc;
 
-    display_message("Waiting");
     rc = check_keypad();
 
     return rc;
@@ -23,7 +22,7 @@ enum ret_codes game_state(void) {
     unsigned char button_state = 0x00;
     enum ret_codes rc = repeat;
 
-    display_message("Game");
+    displayMessage("Game");
     button_state = getButtonState();
     displayLeds(button_state);
 
@@ -31,7 +30,7 @@ enum ret_codes game_state(void) {
 }
 
 enum ret_codes exit_state(void) {
-    display_message("Game failed, code better");
+    displayMessage("Game failed, code better");
     return fail;
 }
 
