@@ -14,6 +14,10 @@ enum ret_codes waiting_state(void) {
 
     rc = check_keypad();
 
+    if (rc == pass) {
+        displayCountdown();
+    }
+
     return rc;
 }
 
@@ -21,9 +25,19 @@ enum ret_codes waiting_state(void) {
 enum ret_codes game_state(void) {
     unsigned char button_state = 0x00;
     enum ret_codes rc = repeat;
+    unsigned int i = 0;
+    int song[] = {10, 110, 210, 310, 410, 510, 610, 0};
 
-    displayMessage("Game");
-    playSong();
+    while(song[i] != 0 && rc != restart) {
+        playNote(song[i]);
+        timeDelay(1);
+        stopPlayingNote();
+        timeDelay(1);
+        rc = check_keypad();
+
+        i++;
+    }
+
     button_state = getButtonState();
     displayLeds(button_state);
 
@@ -70,6 +84,9 @@ void main (void) {
                 } else if (rc == pass) {
                     cur_state = game;
                     break;
+                } else if (rc == restart) {
+                    cur_state = intro;
+                    break;
                 } else {
                     cur_state = end;
                     break;
@@ -82,10 +99,15 @@ void main (void) {
                     break;
                 } else if (rc == lose) {
                     cur_state = intro;
+                    break;
+                } else if (rc == restart) {
+                    cur_state = intro;
+                    break;
                 } else {
                     cur_state = end;
                     break;
                 }
-            }
+
+        }
     }
 }

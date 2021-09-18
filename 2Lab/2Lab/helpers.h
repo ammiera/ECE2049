@@ -14,7 +14,6 @@ enum ret_codes check_keypad(void);
 
 void playNote(unsigned int sound);
 void stopPlayingNote(void);
-void playSong(void);
 
 void timeDelay(unsigned int numLoops);
 

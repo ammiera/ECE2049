@@ -148,6 +148,37 @@ void displayIntroMessage(void) {
 }
 
 void displayCountdown(void) {
+    // Turn all LEDs off to start
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
+
+    displayMessage("3");
+    P6OUT |= (R1REDLED | R2YELLOWLED | R3BLUELED); // light up left 3 LEDs
+    playNote(180);
+    timeDelay(2);// timer delay
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); // LEDs OFF
+    stopPlayingNote();
+
+    displayMessage("2");
+    P6OUT |= (R1REDLED | R2YELLOWLED); // light up left 2 LEDs
+    playNote(140);
+    timeDelay(2);//timer delay
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);// LEDs OFF
+    stopPlayingNote();
+
+    displayMessage("1");
+    P6OUT |= (R1REDLED); // light up left most LED
+    playNote(100);
+    timeDelay(2); // timer delay
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); // LED OFF
+    stopPlayingNote();
+
+    displayMessage("GO!");
+    P6OUT |= (R1REDLED | R2YELLOWLED | R3BLUELED | R4GREENLED); // light up left all LEDs
+    playNote(50);
+    timeDelay(2); // timer delay
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); // LEDs OFF
+    stopPlayingNote();
+    timeDelay(2); // timer delay
 }
 
 enum ret_codes check_keypad(void) {
@@ -155,6 +186,10 @@ enum ret_codes check_keypad(void) {
     currKey = getKey();
     if (currKey == '*') {
             return pass;
+    }
+
+    if (currKey == '#') {
+            return restart;
     } else {
             return repeat;
     }
@@ -185,20 +220,6 @@ void stopPlayingNote(void)
     // Disable both capture/compare periods
     TB0CCTL0 = 0;
     TB0CCTL5 = 0;
-}
-
-void playSong(void) {
-    unsigned int i = 0;
-    int song[] = {20, 50, 80, 110, 140, 170, 200, 300, 400, 500, 600, 0};
-
-    while(song[i] != 0) {
-        playNote(song[i]);
-        timeDelay(1);
-        stopPlayingNote();
-        timeDelay(1);
-
-        i++;
-    }
 }
 
 void timeDelay(unsigned int numLoops) {
