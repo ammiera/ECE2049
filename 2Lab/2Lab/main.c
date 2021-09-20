@@ -34,12 +34,11 @@ enum ret_codes game_state(void) {
         stopPlayingNote();
         timeDelay(1);
         rc = check_keypad();
+        button_state = getButtonState();
+        displayLeds(button_state);
 
         i++;
     }
-
-    button_state = getButtonState();
-    displayLeds(button_state);
 
     return rc;
 }
