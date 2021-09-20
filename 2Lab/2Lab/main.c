@@ -26,7 +26,7 @@ enum ret_codes game_state(void) {
     unsigned char button_state = 0x00;
     enum ret_codes rc = repeat;
     unsigned int i = 0;
-    int song[] = {10, 110, 210, 310, 410, 510, 610, 0};
+    int song[] = {C, D, Eflat, C, D, F, Eflat, C, D, Eflat, D, C, 0};
 
     while(song[i] != 0 && rc != restart) {
         playNote(song[i]);

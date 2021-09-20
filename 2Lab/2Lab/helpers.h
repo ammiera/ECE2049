@@ -1,6 +1,35 @@
 #ifndef HELPERS_H_
 #define HELPERS_H_
 
+// defines the pitches
+#define A 440
+#define Bflat 466
+#define B 494
+#define Cnorm 523
+#define Csharp 554
+#define D 587
+#define Eflat 622
+#define E 659
+#define F 698
+#define Fsharp 740
+#define G 784
+#define Aflat 831
+
+// defines the hex values that correspond to the user buttons
+#define S1PRSSD 0x01
+#define S2PRSSD 0x02
+#define S3PRSSD 0x04
+#define S4PRSSD 0x08
+
+// defines the LEDs
+#define R1REDLED BIT2
+#define R2YELLOWLED BIT1
+#define R3BLUELED BIT3
+#define R4GREENLED BIT4
+
+// defines ACLCK frequency
+#define ACLCKFQ 32.768
+
 void configButtons(void);
 unsigned char getButtonState(void);
 
@@ -12,7 +41,7 @@ void displayCountdown(void);
 
 enum ret_codes check_keypad(void);
 
-void playNote(unsigned int sound);
+void playNote(unsigned int frequency);
 void stopPlayingNote(void);
 
 void timeDelay(unsigned int numLoops);

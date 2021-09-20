@@ -3,33 +3,7 @@
 #include <msp430.h>
 #include <stdlib.h>
 #include "peripherals.h"
-
-// defines the pitches
-#define A 440
-#define Bflat 466
-#define B 494
-#define Cnorm 523
-#define Csharp 554
-#define D 587
-#define Eb 622
-#define E 659
-#define F 698
-#define Fsharp 740
-#define G 784
-#define Aflat 831
-
-// defines the hex values that correspond to the user buttons
-#define S1PRSSD 0x01
-#define S2PRSSD 0x02
-#define S3PRSSD 0x04
-#define S4PRSSD 0x08
-
-
-// defines the LEDs
-#define R1REDLED BIT2
-#define R2YELLOWLED BIT1
-#define R3BLUELED BIT3
-#define R4GREENLED BIT4
+#include "math.h"
 
 /* gets the hex value that corresponds to each user button */
 unsigned char getButtonState(void) {
@@ -153,28 +127,28 @@ void displayCountdown(void) {
 
     displayMessage("3");
     P6OUT |= (R1REDLED | R2YELLOWLED | R3BLUELED); // light up left 3 LEDs
-    playNote(180);
+    playNote(E);
     timeDelay(2);// timer delay
     P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); // LEDs OFF
     stopPlayingNote();
 
     displayMessage("2");
     P6OUT |= (R1REDLED | R2YELLOWLED); // light up left 2 LEDs
-    playNote(140);
+    playNote(E);
     timeDelay(2);//timer delay
     P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);// LEDs OFF
     stopPlayingNote();
 
     displayMessage("1");
     P6OUT |= (R1REDLED); // light up left most LED
-    playNote(100);
+    playNote(E);
     timeDelay(2); // timer delay
     P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); // LED OFF
     stopPlayingNote();
 
     displayMessage("GO!");
     P6OUT |= (R1REDLED | R2YELLOWLED | R3BLUELED | R4GREENLED); // light up left all LEDs
-    playNote(50);
+    playNote(A);
     timeDelay(2); // timer delay
     P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); // LEDs OFF
     stopPlayingNote();
@@ -184,18 +158,22 @@ void displayCountdown(void) {
 enum ret_codes check_keypad(void) {
     unsigned char currKey = 0;
     currKey = getKey();
+
     if (currKey == '*') {
-            return pass;
+        return pass;
     }
 
     if (currKey == '#') {
-            return restart;
-    } else {
-            return repeat;
+        return restart;
     }
+
+    return repeat;
 }
 
-void playNote(unsigned int sound) {
+void playNote(unsigned int frequency) {
+    int period = (frequency/ACLCKFQ);
+
+
     // Initialize PWM output on P3.5, which corresponds to TB0.5
     P3SEL |= BIT5; // Select peripheral output mode for P3.5
     P3DIR |= BIT5;
@@ -206,7 +184,7 @@ void playNote(unsigned int sound) {
     // Now configure the timer period, which controls the PWM period
     // Doing this with a hard coded values is NOT the best method
     // We do it here only as an example. You will fix this in Lab 2.
-    TB0CCR0 = sound;                    // Set the PWM period in ACLK ticks
+    TB0CCR0 = period;                    // Set the PWM period in ACLK ticks
     TB0CCTL0 &= ~CCIE;                  // Disable timer interrupts
 
     // Configure CC register 5, which is connected to our PWM pin TB0.5
