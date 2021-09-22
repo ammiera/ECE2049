@@ -30,6 +30,9 @@
 // defines ACLCK frequency
 #define ACLCKFQ 32.768
 
+// defines the number of tics that have occured when 0.005 seconds have passed
+#define MAXCOUNT 32767
+
 void configButtons(void);
 unsigned char getButtonState(void);
 
@@ -39,7 +42,7 @@ void displayMessage(char* message);
 void displayIntroMessage(void);
 void displayCountdown(void);
 
-enum ret_codes check_keypad(void);
+int check_keypad(void);
 
 void playNote(unsigned int frequency);
 void stopPlayingNote(void);

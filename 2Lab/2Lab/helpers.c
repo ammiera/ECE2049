@@ -155,19 +155,19 @@ void displayCountdown(void) {
     timeDelay(2); // timer delay
 }
 
-enum ret_codes check_keypad(void) {
+int check_keypad(void) {
     unsigned char currKey = 0;
     currKey = getKey();
 
     if (currKey == '*') {
-        return pass;
+        return PASS;
     }
 
     if (currKey == '#') {
-        return restart;
+        return RESTART;
     }
 
-    return repeat;
+    return REPEAT;
 }
 
 void playNote(unsigned int frequency) {
@@ -210,6 +210,30 @@ void timeDelay(unsigned int numLoops) {
         while (i > 0)
            i--;
     }
+}
+
+void setAclk(void) {
+    P5SEL |= (BIT5 | BIT4 | BIT3 | BIT2 | BIT1);
+
+    // defaults
+    UCSCTL0 = 0x14B8;
+    UCSCTL1 = 0x0020;
+    UCSCTL2 = 0x101F;
+    UCSCTL3 = 0x0000;
+    UCSCTL4 = 0x0044;
+    UCSCTL5 = 0x0000;
+    UCSCTL6 = 0xC1CD;
+    UCSCTL7 = 0x0403;
+    UCSCTL8 = 0x0707;
+}
+
+/* leap counting is NOT needed because accuracy is not a concern*/
+void runTimerA2(void) {
+    TA2CTL = (TASSEL_2 | ID_0 | MC_1); // chooses SMCLK as the source clock,
+                                       // chooses input divider to be divide by 1,
+                                       // chooses up count mode
+    TA2CCR0 = MAXCOUNT; // sets interrupt time
+    TA2CCTL0 = CCIE; // enables TA2CCRO interrupt
 }
 
 

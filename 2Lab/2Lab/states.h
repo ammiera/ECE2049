@@ -1,12 +1,20 @@
 #ifndef STATES_H_
 #define STATES_H_
 
-enum state_codes { intro, waiting, game, end}; // key words for states
-enum ret_codes { pass, fail, repeat, restart, lose}; // key words for return codes
+#define INTRO 0
+#define WAITING 1
+#define GAME 2
+#define END 3
 
-enum ret_codes entry_state(void);
-enum ret_codes waiting_state(void);
-enum ret_codes game_state(void);
-enum ret_codes exit_state(void);
+#define PASS 0
+#define FAIL 1
+#define REPEAT 2
+#define RESTART 3
+#define LOSE 4
+
+int entry_state(void);
+int waiting_state(void);
+int game_state(void);
+int exit_state(void);
 
 #endif /* STATES_H_ */

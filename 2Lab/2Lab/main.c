@@ -3,18 +3,31 @@
 #include <msp430.h>
 #include "peripherals.h"
 
-enum ret_codes intro_state(void) {
-    displayIntroMessage();
+// global variables for interrupts
+unsigned int timer_cnt = 0; // holds current time with 0.005 accuracy
+int song[] = {Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, 0};
+int cur_state = INTRO; /* starts the game */
 
-    return pass;
+#pragma vector = TIMER2_A0_VECTOR
+__interrupt void TimerA2_ISR(void) {
+    if (cur_state == GAME && song[timer_cnt] != 0) {
+        playNote(song[timer_cnt]);
+        timer_cnt++;
+    }
 }
 
-enum ret_codes waiting_state(void) {
-    enum ret_codes rc;
+int intro_state(void) {
+    displayIntroMessage();
+
+    return PASS;
+}
+
+int waiting_state(void) {
+    int rc;
 
     rc = check_keypad();
 
-    if (rc == pass) {
+    if (rc == PASS) {
         displayCountdown();
     }
 
@@ -22,88 +35,84 @@ enum ret_codes waiting_state(void) {
 }
 
 
-enum ret_codes game_state(void) {
+int game_state(void) {
     unsigned char button_state = 0x00;
-    enum ret_codes rc = repeat;
+    int rc = REPEAT;
     unsigned int i = 0;
-    int song[] = {C, D, Eflat, C, D, F, Eflat, C, D, Eflat, D, C, 0};
 
-    while(song[i] != 0 && rc != restart) {
-        playNote(song[i]);
-        timeDelay(1);
-        stopPlayingNote();
-        timeDelay(1);
+    while(rc != RESTART) {
         rc = check_keypad();
         button_state = getButtonState();
         displayLeds(button_state);
-
         i++;
     }
 
     return rc;
 }
 
-enum ret_codes exit_state(void) {
+int exit_state(void) {
     displayMessage("Game failed, code better");
-    return fail;
+    return FAIL;
 }
 
 void main (void) {
 
     WDTCTL = WDTPW | WDTHOLD; /* stops watchdog timer. Always need to stop this!! */
+    _BIS_SR(GIE); // enables global interrupts
 
-    enum state_codes cur_state = intro; /* starts the game */
-    enum ret_codes rc; /* declares return codes */
+    int rc; /* declares return codes */
 
     /* initializes board */
+    setAclk();
+    runTimerA2();
     configDisplay();
     configButtons();
     configKeypad();
     initLeds();
 
     /* checks that the game only runs when an error has not occured */
-    while (cur_state != end) {
+    while (cur_state != END) {
 
         switch(cur_state) {
-            case intro:
+            case INTRO:
                 rc = intro_state();
-                if (rc == pass) {
-                    cur_state = waiting;
+                if (rc == PASS) {
+                    cur_state = WAITING;
                     break;
                 } else {
-                    cur_state = end;
+                    cur_state = END;
                     break;
                 }
 
-            case waiting:
+            case WAITING:
                 rc = waiting_state();
-                if (rc == repeat) {
-                    cur_state = waiting;
+                if (rc == REPEAT) {
+                    cur_state = WAITING;
                     break;
-                } else if (rc == pass) {
-                    cur_state = game;
+                } else if (rc == PASS) {
+                    cur_state = GAME;
                     break;
-                } else if (rc == restart) {
-                    cur_state = intro;
+                } else if (rc == RESTART) {
+                    cur_state = INTRO;
                     break;
                 } else {
-                    cur_state = end;
+                    cur_state = END;
                     break;
                 }
 
-            case game:
+            case GAME:
                 rc = game_state();
-                if (rc == repeat) {
-                    cur_state = game;
+                if (rc == REPEAT) {
+                    cur_state = GAME;
                     break;
-                } else if (rc == lose) {
-                    cur_state = intro;
+                } else if (rc == LOSE) {
+                    cur_state = INTRO;
                     break;
-                } else if (rc == restart) {
-                    cur_state = intro;
+                } else if (rc == RESTART) {
+                    cur_state = INTRO;
                     break;
                 } else {
-                    cur_state = end;
+                    cur_state = END;
                     break;
                 }
 
