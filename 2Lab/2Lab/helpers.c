@@ -170,10 +170,7 @@ int check_keypad(void) {
     return REPEAT;
 }
 
-void playNote(unsigned int frequency) {
-    int period = (frequency/ACLCKFQ);
-
-
+void configNote(void) {
     // Initialize PWM output on P3.5, which corresponds to TB0.5
     P3SEL |= BIT5; // Select peripheral output mode for P3.5
     P3DIR |= BIT5;
@@ -184,8 +181,13 @@ void playNote(unsigned int frequency) {
     // Now configure the timer period, which controls the PWM period
     // Doing this with a hard coded values is NOT the best method
     // We do it here only as an example. You will fix this in Lab 2.
-    TB0CCR0 = period;                    // Set the PWM period in ACLK ticks
     TB0CCTL0 &= ~CCIE;                  // Disable timer interrupts
+}
+
+void playNote(unsigned int frequency) {
+    int period = (frequency/ACLCKFQ);
+
+    TB0CCR0 = period; // Set the PWM period in ACLK ticks
 
     // Configure CC register 5, which is connected to our PWM pin TB0.5
     TB0CCTL5  = OUTMOD_7;                   // Set/reset mode for PWM

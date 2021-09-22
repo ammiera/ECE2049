@@ -31,7 +31,7 @@
 #define ACLCKFQ 32.768
 
 // defines the number of tics that have occured when 0.005 seconds have passed
-#define MAXCOUNT 32767
+#define MAXCOUNT 163
 
 void configButtons(void);
 unsigned char getButtonState(void);
@@ -44,6 +44,7 @@ void displayCountdown(void);
 
 int check_keypad(void);
 
+void configNote(void);
 void playNote(unsigned int frequency);
 void stopPlayingNote(void);
 

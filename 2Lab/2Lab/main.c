@@ -5,15 +5,13 @@
 
 // global variables for interrupts
 unsigned int timer_cnt = 0; // holds current time with 0.005 accuracy
-int song[] = {Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, 0};
-int cur_state = INTRO; /* starts the game */
+unsigned char button_state = 0x00;
+int song[] = {Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, 0};
 
 #pragma vector = TIMER2_A0_VECTOR
 __interrupt void TimerA2_ISR(void) {
-    if (cur_state == GAME && song[timer_cnt] != 0) {
-        playNote(song[timer_cnt]);
-        timer_cnt++;
-    }
+    timer_cnt++;
+    button_state = getButtonState();
 }
 
 int intro_state(void) {
@@ -36,13 +34,14 @@ int waiting_state(void) {
 
 
 int game_state(void) {
-    unsigned char button_state = 0x00;
     int rc = REPEAT;
     unsigned int i = 0;
 
-    while(rc != RESTART) {
+    while(rc != RESTART && song[i] != 0) {
+        playNote(song[i]);
+        timeDelay(1);
+        stopPlayingNote();
         rc = check_keypad();
-        button_state = getButtonState();
         displayLeds(button_state);
         i++;
     }
@@ -61,6 +60,7 @@ void main (void) {
     _BIS_SR(GIE); // enables global interrupts
 
     int rc; /* declares return codes */
+    int cur_state = INTRO; /* starts the game */
 
     /* initializes board */
     setAclk();
@@ -68,6 +68,7 @@ void main (void) {
     configDisplay();
     configButtons();
     configKeypad();
+    configNote();
     initLeds();
 
     /* checks that the game only runs when an error has not occured */
