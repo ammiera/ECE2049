@@ -15,6 +15,12 @@
 #define G 784
 #define Aflat 831
 
+struct Note {
+    int note;
+    int tics;
+};
+
+
 // defines the hex values that correspond to the user buttons
 #define S1PRSSD 0x01
 #define S2PRSSD 0x02

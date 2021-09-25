@@ -3,21 +3,37 @@
 #include <msp430.h>
 #include "peripherals.h"
 
+// global song variables
+unsigned song_len = 58; // to do, figure this out automatically in main function with for loop
+/*
+struct Note song[] = {{E, 1000}, {E, 1000}, {E, 1000},
+                      {Cnorm, 2000}, {E, 2000}, {G, 2000}, {G, 2000},
+                      {Cnorm, 2000}, {G, 2000}, {E, 2000},
+                      {A, 2000}, {Bflat, 2000}, {B, 2000},
+                      {Cnorm, 2000}, {E, 2000}, {G, 2000}, {A, 2000},
+                      {F, 2000}, {G, 2000}, {E, 2000}, {Cnorm, 2000}, {D, 2000}, {B, 2000},
+                      {Cnorm, 2000}, {G, 2000}, {E, 2000},
+                      {A, 2000}, {Bflat, 2000}, {B, 2000},
+                      {Cnorm, 2000}, {E, 2000}, {G, 2000}, {A, 2000},
+                      {F, 2000}, {G, 2000}, {E, 2000}, {Cnorm, 2000}, {D, 2000}, {B, 2000},
+                      {G, 2000}, {Fsharp, 2000}, {F, 2000}, {D, 2000}, {E, 2000},
+                      {G, 2000}, {A, 2000}, {Cnorm, 2000},
+                      {A, 2000}, {Cnorm, 2000}, {D, 2000},
+                      {G, 2000}, {Fsharp, 2000}, {F, 2000}, {D, 2000}, {E, 2000},
+                      {Cnorm, 2000}, {Cnorm, 2000}, {Cnorm, 2000}};
+*/
+struct Note song[] = {{A, 2000}, {F, 2000}, {G, 2000}, {G, 2000}, {A, 2000},
+                      {D, 2000}, {F, 2000}, {F, 2000}, {C, 2000}, {A, 2000},
+                      {D, 2000}, {A, 2000}, {F, 2000}, {G, 2000}, {A, 2000},
+                      {G, 2000}, {F, 2000}, {G, 2000}, {A, 2000}, {F, 2000}};
+
 // global variables for interrupts
 int cur_note;
 unsigned int timer_cnt; // holds current time with 0.005 accuracy
 
-struct Note {
-    int note;
-    int tics;
-};
-struct Note song[] = {{E, 1000}, {E, 1000}, {E, 1000}, {Cnorm, 2000},
-{E, 1000}, {G, 5000}, {G, 5000}};
-unsigned songLen = 7;
-
 #pragma vector = TIMER2_A0_VECTOR
 __interrupt void TimerA2_ISR(void) {
-    if (cur_note >= 0 && cur_note < songLen) {
+    if (cur_note >= 0 && cur_note < song_len) {
         if (timer_cnt < song[cur_note].tics) {
             timer_cnt++;
         } else {
@@ -57,7 +73,7 @@ int game_state(void) {
         rc = check_keypad();
         displayLeds(button_state);
 
-        if(cur_note == songLen) {
+        if(cur_note == song_len) {
             rc = RESTART;
         }
     }
