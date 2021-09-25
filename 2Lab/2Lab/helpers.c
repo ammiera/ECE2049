@@ -96,6 +96,11 @@ void displayLeds(char button_state) {
     }
 }
 
+void turnOffLeds(void) {
+    // Turn all LEDs off to start
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
+}
+
 void displayMessage(char* message) {
 
     Graphics_clearDisplay(&g_sContext); // clears the display

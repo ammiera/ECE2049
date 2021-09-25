@@ -37,6 +37,7 @@ void configButtons(void);
 unsigned char getButtonState(void);
 
 void displayLeds(char button_state);
+void turnOffLeds(void);
 
 void displayMessage(char* message);
 void displayIntroMessage(void);

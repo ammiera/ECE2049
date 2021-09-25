@@ -4,14 +4,26 @@
 #include "peripherals.h"
 
 // global variables for interrupts
-unsigned int timer_cnt = 0; // holds current time with 0.005 accuracy
-unsigned char button_state = 0x00;
-int song[] = {Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, Cnorm, D, Eflat, Cnorm, D, F, Eflat, Cnorm, D, Eflat, D, Cnorm, 0};
+int cur_note = -1;;
+unsigned int timer_cnt; // holds current time with 0.005 accuracy
+struct Note {
+    int note;
+    int tics;
+};
+struct Note song[] = {{E, 1}, {E, 1}, {E, 1}, {Cnorm, 2},
+{E, 1}, {G, 5}, {G, 5}, {0,0}};
 
 #pragma vector = TIMER2_A0_VECTOR
 __interrupt void TimerA2_ISR(void) {
-    timer_cnt++;
-    button_state = getButtonState();
+    if (cur_note != -1) {
+        if (timer_cnt < song[cur_note].tics) {
+            timer_cnt++;
+        } else {
+            timer_cnt = 0;
+            cur_note++;
+        }
+
+    }
 }
 
 int intro_state(void) {
@@ -34,16 +46,25 @@ int waiting_state(void) {
 
 
 int game_state(void) {
-    int rc = REPEAT;
-    unsigned int i = 0;
+    unsigned int rc = REPEAT;
+    unsigned char button_state = 0x00;
+    cur_note = 0;
 
-    while(rc != RESTART && song[i] != 0) {
-        playNote(song[i]);
-        timeDelay(1);
-        stopPlayingNote();
+    while(rc != RESTART) {
+        playNote(song[cur_note].note);
+        button_state = getButtonState();
         rc = check_keypad();
         displayLeds(button_state);
-        i++;
+
+        if(song[cur_note].note == 0) {
+            rc = RESTART;
+            turnOffLeds();
+            stopPlayingNote();
+        }
+
+        if (timer_cnt == 0) {
+            stopPlayingNote();
+        }
     }
 
     return rc;
@@ -59,8 +80,8 @@ void main (void) {
     WDTCTL = WDTPW | WDTHOLD; /* stops watchdog timer. Always need to stop this!! */
     _BIS_SR(GIE); // enables global interrupts
 
-    int rc; /* declares return codes */
-    int cur_state = INTRO; /* starts the game */
+    unsigned int rc; /* declares return codes */
+    unsigned int cur_state = INTRO; /* starts the game */
 
     /* initializes board */
     setAclk();
