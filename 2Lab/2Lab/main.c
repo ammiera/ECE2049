@@ -4,25 +4,26 @@
 #include "peripherals.h"
 
 // global variables for interrupts
-int cur_note = -1;;
+int cur_note;
 unsigned int timer_cnt; // holds current time with 0.005 accuracy
+
 struct Note {
     int note;
     int tics;
 };
-struct Note song[] = {{E, 1}, {E, 1}, {E, 1}, {Cnorm, 2},
-{E, 1}, {G, 5}, {G, 5}, {0,0}};
+struct Note song[] = {{E, 1000}, {E, 1000}, {E, 1000}, {Cnorm, 2000},
+{E, 1000}, {G, 5000}, {G, 5000}};
+unsigned songLen = 7;
 
 #pragma vector = TIMER2_A0_VECTOR
 __interrupt void TimerA2_ISR(void) {
-    if (cur_note != -1) {
+    if (cur_note >= 0 && cur_note < songLen) {
         if (timer_cnt < song[cur_note].tics) {
             timer_cnt++;
         } else {
             timer_cnt = 0;
             cur_note++;
         }
-
     }
 }
 
@@ -56,16 +57,13 @@ int game_state(void) {
         rc = check_keypad();
         displayLeds(button_state);
 
-        if(song[cur_note].note == 0) {
+        if(cur_note == songLen) {
             rc = RESTART;
-            turnOffLeds();
-            stopPlayingNote();
-        }
-
-        if (timer_cnt == 0) {
-            stopPlayingNote();
         }
     }
+
+    turnOffLeds();
+    stopPlayingNote();
 
     return rc;
 }
@@ -82,6 +80,8 @@ void main (void) {
 
     unsigned int rc; /* declares return codes */
     unsigned int cur_state = INTRO; /* starts the game */
+    timer_cnt = 0;
+    cur_note = -1;
 
     /* initializes board */
     setAclk();
