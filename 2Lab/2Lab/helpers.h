@@ -48,6 +48,7 @@ void turnOffLeds(void);
 void displayMessage(char* message);
 void displayIntroMessage(void);
 void displayCountdown(void);
+void displayLosingMessages(void);
 
 int check_keypad(void);
 
@@ -56,5 +57,6 @@ void playNote(unsigned int frequency);
 void stopPlayingNote(void);
 
 void timeDelay(unsigned int numLoops);
+void runTimerA2(void);
 
 #endif /* HELPERS_H_ */

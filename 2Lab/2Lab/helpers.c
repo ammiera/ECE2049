@@ -244,6 +244,19 @@ void runTimerA2(void) {
 }
 
 
+void displayLosingMessages(void) {
+    // clears the display
+    Graphics_clearDisplay(&g_sContext);
+    // writes welcome message
+    Graphics_drawStringCentered(&g_sContext, "BOO, You Suck!", AUTO_STRING_LENGTH, 48, 15, TRANSPARENT_TEXT);
+    Graphics_drawStringCentered(&g_sContext, "Music is not", AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
+    Graphics_drawStringCentered(&g_sContext, "your calling!", AUTO_STRING_LENGTH, 48, 35, TRANSPARENT_TEXT);
+    // flushes text to the display
+    Graphics_flushBuffer(&g_sContext);
+}
+
+
+
 
 
 

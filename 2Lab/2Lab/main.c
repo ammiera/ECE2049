@@ -4,32 +4,28 @@
 #include "peripherals.h"
 
 // global song variables
-unsigned song_len = 58; // to do, figure this out automatically in main function with for loop
-/*
-struct Note song[] = {{E, 1000}, {E, 1000}, {E, 1000},
-                      {Cnorm, 2000}, {E, 2000}, {G, 2000}, {G, 2000},
-                      {Cnorm, 2000}, {G, 2000}, {E, 2000},
-                      {A, 2000}, {Bflat, 2000}, {B, 2000},
-                      {Cnorm, 2000}, {E, 2000}, {G, 2000}, {A, 2000},
-                      {F, 2000}, {G, 2000}, {E, 2000}, {Cnorm, 2000}, {D, 2000}, {B, 2000},
-                      {Cnorm, 2000}, {G, 2000}, {E, 2000},
-                      {A, 2000}, {Bflat, 2000}, {B, 2000},
-                      {Cnorm, 2000}, {E, 2000}, {G, 2000}, {A, 2000},
-                      {F, 2000}, {G, 2000}, {E, 2000}, {Cnorm, 2000}, {D, 2000}, {B, 2000},
-                      {G, 2000}, {Fsharp, 2000}, {F, 2000}, {D, 2000}, {E, 2000},
-                      {G, 2000}, {A, 2000}, {Cnorm, 2000},
-                      {A, 2000}, {Cnorm, 2000}, {D, 2000},
-                      {G, 2000}, {Fsharp, 2000}, {F, 2000}, {D, 2000}, {E, 2000},
-                      {Cnorm, 2000}, {Cnorm, 2000}, {Cnorm, 2000}};
-*/
-struct Note song[] = {{A, 2000}, {F, 2000}, {G, 2000}, {G, 2000}, {A, 2000},
-                      {D, 2000}, {F, 2000}, {F, 2000}, {C, 2000}, {A, 2000},
-                      {D, 2000}, {A, 2000}, {F, 2000}, {G, 2000}, {A, 2000},
-                      {G, 2000}, {F, 2000}, {G, 2000}, {A, 2000}, {F, 2000}};
+unsigned int song_len = 58; // to do, figure this out automatically in main function with for loop
+int cur_score;
+
+struct Note song[] = {{E, 6000}, {E, 6000}, {E, 6000},
+                      {Cnorm, 6000}, {E, 6000}, {G, 6000}, {G, 6000},
+                      {Cnorm, 6000}, {G, 6000}, {E, 6000},
+                      {A, 6000}, {Bflat, 6000}, {B, 6000},
+                      {Cnorm, 6000}, {E, 6000}, {G, 6000}, {A, 6000},
+                      {F, 6000}, {G, 6000}, {E, 6000}, {Cnorm, 6000}, {D, 6000}, {B, 6000},
+                      {Cnorm, 6000}, {G, 6000}, {E, 6000},
+                      {A, 6000}, {Bflat, 6000}, {B, 6000},
+                      {Cnorm, 6000}, {E, 6000}, {G, 6000}, {A, 6000},
+                      {F, 6000}, {G, 6000}, {E, 6000}, {Cnorm, 6000}, {D, 6000}, {B, 6000},
+                      {G, 6000}, {Fsharp, 6000}, {F, 6000}, {D, 6000}, {E, 6000},
+                      {G, 6000}, {A, 6000}, {Cnorm, 6000},
+                      {A, 6000}, {Cnorm, 6000}, {D, 6000},
+                      {G, 6000}, {Fsharp, 6000}, {F, 6000}, {D, 6000}, {E, 6000},
+                      {Cnorm, 6000}, {Cnorm, 6000}, {Cnorm, 6000}};
 
 // global variables for interrupts
 int cur_note;
-unsigned int timer_cnt; // holds current time with 0.005 accuracy
+unsigned int timer_cnt; // holds current time with 0.01 accuracy
 
 #pragma vector = TIMER2_A0_VECTOR
 __interrupt void TimerA2_ISR(void) {
@@ -39,8 +35,49 @@ __interrupt void TimerA2_ISR(void) {
         } else {
             timer_cnt = 0;
             cur_note++;
+            cur_score--;
         }
     }
+}
+
+void setLEDState(void) {
+    //checks if any of the 12 notes are played, based on which note was played,
+    //it will then light up the LED that has been assigned to that note
+
+    // Turn all LEDs off to start
+    P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
+
+    switch(song[cur_note].note) {
+    case A: case Bflat: case B:
+        P6OUT |= R1REDLED;
+        break;
+    case Cnorm: case Csharp: case D:
+        P6OUT |= R2YELLOWLED;
+        break;
+    case Eflat: case E: case F:
+        P6OUT |= R3BLUELED;
+        break;
+    case Fsharp: case G: case Aflat:
+        P6OUT |= R4GREENLED;
+    default:
+        P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); //Turns LEDS off by default
+    }
+}
+
+int trackScore(unsigned char button_state, int cur_score) {
+    if ((button_state == S1PRSSD) && (P6OUT & R1REDLED == 0x04)) {
+        cur_score++;
+    } else if ((button_state == S2PRSSD) && (P6OUT & R2YELLOWLED == 0x02)) {
+        cur_score++;
+    } else if ((button_state == S3PRSSD) && (P6OUT & R3BLUELED == 0x08)) {
+        cur_score++;
+    } else if ((button_state == S4PRSSD) && (P6OUT & R4GREENLED == 0x10)) {
+        cur_score++;
+    } else {
+        cur_score = cur_score;
+    }
+
+    return cur_score;
 }
 
 int intro_state(void) {
@@ -65,21 +102,32 @@ int waiting_state(void) {
 int game_state(void) {
     unsigned int rc = REPEAT;
     unsigned char button_state = 0x00;
+    cur_score = song_len;
     cur_note = 0;
 
-    while(rc != RESTART) {
+    while(rc != RESTART && rc != LOSE) {
         playNote(song[cur_note].note);
         button_state = getButtonState();
         rc = check_keypad();
-        displayLeds(button_state);
+        setLEDState();
+        cur_score = trackScore(button_state, cur_score);
 
-        if(cur_note == song_len) {
+        if (cur_note == song_len) {
             rc = RESTART;
+        }
+
+        if (cur_score < song_len/2) {
+            rc = LOSE;
         }
     }
 
     turnOffLeds();
     stopPlayingNote();
+
+    if (rc == LOSE) {
+        displayLosingMessages(); // when player lost, this plays
+        timeDelay(3);
+    }
 
     return rc;
 }

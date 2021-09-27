@@ -16,5 +16,7 @@ int entry_state(void);
 int waiting_state(void);
 int game_state(void);
 int exit_state(void);
+void setLEDState(void);
+int trackScore(unsigned char button_state, int cur_score);
 
 #endif /* STATES_H_ */
