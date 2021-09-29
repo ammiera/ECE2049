@@ -255,6 +255,24 @@ void displayLosingMessages(void) {
     Graphics_flushBuffer(&g_sContext);
 }
 
+int trackScore(char button_state, int cur_score) {
+    if ((button_state == S1PRSSD) && ((P6OUT & R1REDLED) == 0x04)) {
+        cur_score++;
+    } else if ((button_state == S2PRSSD) && ((P6OUT & R2YELLOWLED) == 0x02)) {
+        cur_score++;
+    } else if ((button_state == S3PRSSD) && ((P6OUT & R3BLUELED) == 0x08)) {
+        cur_score++;
+    } else if ((button_state == S4PRSSD) && ((P6OUT & R4GREENLED) == 0x10)) {
+        cur_score++;
+    } else {
+        cur_score--;
+        displayMessage("Minus 1 point");
+    }
+
+    return cur_score;
+}
+
+
 
 
 

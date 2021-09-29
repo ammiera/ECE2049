@@ -15,11 +15,6 @@
 #define G 784
 #define Aflat 831
 
-struct Note {
-    int note;
-    int tics;
-};
-
 
 // defines the hex values that correspond to the user buttons
 #define S1PRSSD 0x01
@@ -44,6 +39,7 @@ unsigned char getButtonState(void);
 
 void displayLeds(char button_state);
 void turnOffLeds(void);
+int trackScore(char button_state, int cur_score);
 
 void displayMessage(char* message);
 void displayIntroMessage(void);

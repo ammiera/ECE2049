@@ -11,12 +11,12 @@
 #define REPEAT 2
 #define RESTART 3
 #define LOSE 4
+#define WIN 5
 
 int entry_state(void);
 int waiting_state(void);
 int game_state(void);
 int exit_state(void);
-void setLEDState(void);
-int trackScore(unsigned char button_state, int cur_score);
+void setLEDState(int cur_note);
 
 #endif /* STATES_H_ */

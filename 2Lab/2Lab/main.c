@@ -2,52 +2,30 @@
 #include "helpers.h"
 #include <msp430.h>
 #include "peripherals.h"
+#include <stdio.h>
 
-// global song variables
-unsigned int song_len = 58; // to do, figure this out automatically in main function with for loop
-int cur_score;
+// global variables
+int song[] = {A, Cnorm, Cnorm, Cnorm, D, E, E, D, E, F, Aflat, Cnorm, Cnorm, Cnorm, Aflat, Aflat, Aflat, E, E, E, Cnorm, Cnorm, Cnorm, Aflat, F, E, D, Cnorm, 0};
 
-struct Note song[] = {{E, 6000}, {E, 6000}, {E, 6000},
-                      {Cnorm, 6000}, {E, 6000}, {G, 6000}, {G, 6000},
-                      {Cnorm, 6000}, {G, 6000}, {E, 6000},
-                      {A, 6000}, {Bflat, 6000}, {B, 6000},
-                      {Cnorm, 6000}, {E, 6000}, {G, 6000}, {A, 6000},
-                      {F, 6000}, {G, 6000}, {E, 6000}, {Cnorm, 6000}, {D, 6000}, {B, 6000},
-                      {Cnorm, 6000}, {G, 6000}, {E, 6000},
-                      {A, 6000}, {Bflat, 6000}, {B, 6000},
-                      {Cnorm, 6000}, {E, 6000}, {G, 6000}, {A, 6000},
-                      {F, 6000}, {G, 6000}, {E, 6000}, {Cnorm, 6000}, {D, 6000}, {B, 6000},
-                      {G, 6000}, {Fsharp, 6000}, {F, 6000}, {D, 6000}, {E, 6000},
-                      {G, 6000}, {A, 6000}, {Cnorm, 6000},
-                      {A, 6000}, {Cnorm, 6000}, {D, 6000},
-                      {G, 6000}, {Fsharp, 6000}, {F, 6000}, {D, 6000}, {E, 6000},
-                      {Cnorm, 6000}, {Cnorm, 6000}, {Cnorm, 6000}};
-
-// global variables for interrupts
-int cur_note;
+unsigned int song_len = 28; // to do, figure this out automatically in main function with for loop
 unsigned int timer_cnt; // holds current time with 0.01 accuracy
+unsigned int cur_state; /* starts the game */
 
 #pragma vector = TIMER2_A0_VECTOR
 __interrupt void TimerA2_ISR(void) {
-    if (cur_note >= 0 && cur_note < song_len) {
-        if (timer_cnt < song[cur_note].tics) {
-            timer_cnt++;
-        } else {
-            timer_cnt = 0;
-            cur_note++;
-            cur_score--;
-        }
+    if (cur_state == GAME) {
+        timer_cnt++;
     }
 }
 
-void setLEDState(void) {
+void setLEDState(int cur_note) {
     //checks if any of the 12 notes are played, based on which note was played,
     //it will then light up the LED that has been assigned to that note
 
     // Turn all LEDs off to start
     P6OUT &= ~(BIT4|BIT3|BIT2|BIT1);
 
-    switch(song[cur_note].note) {
+    switch(song[cur_note]) {
     case A: case Bflat: case B:
         P6OUT |= R1REDLED;
         break;
@@ -62,22 +40,6 @@ void setLEDState(void) {
     default:
         P6OUT &= ~(BIT4|BIT3|BIT2|BIT1); //Turns LEDS off by default
     }
-}
-
-int trackScore(unsigned char button_state, int cur_score) {
-    if ((button_state == S1PRSSD) && (P6OUT & R1REDLED == 0x04)) {
-        cur_score++;
-    } else if ((button_state == S2PRSSD) && (P6OUT & R2YELLOWLED == 0x02)) {
-        cur_score++;
-    } else if ((button_state == S3PRSSD) && (P6OUT & R3BLUELED == 0x08)) {
-        cur_score++;
-    } else if ((button_state == S4PRSSD) && (P6OUT & R4GREENLED == 0x10)) {
-        cur_score++;
-    } else {
-        cur_score = cur_score;
-    }
-
-    return cur_score;
 }
 
 int intro_state(void) {
@@ -101,33 +63,54 @@ int waiting_state(void) {
 
 int game_state(void) {
     unsigned int rc = REPEAT;
+    int cur_score = song_len + 1;
     unsigned char button_state = 0x00;
-    cur_score = song_len;
-    cur_note = 0;
+    int cur_note = 0;
 
-    while(rc != RESTART && rc != LOSE) {
-        playNote(song[cur_note].note);
-        button_state = getButtonState();
-        rc = check_keypad();
-        setLEDState();
-        cur_score = trackScore(button_state, cur_score);
+    while(1) {
+        if (song[cur_note] == 0) {
+            rc = WIN;
+            break;
+        } else {
+            button_state = getButtonState();
 
-        if (cur_note == song_len) {
-            rc = RESTART;
-        }
+            if(timer_cnt - cur_note*6000 < 6000) {
+                playNote(song[cur_note]);
+            } else {
+                cur_note++;
+                stopPlayingNote();
+                timeDelay(0.5);
+                cur_score = trackScore(button_state, cur_score);
+            }
 
-        if (cur_score < song_len/2) {
-            rc = LOSE;
+            rc = check_keypad();
+            if (rc == RESTART) {
+                break;
+            }
+
+            setLEDState(cur_note);
+            if (cur_score <= song_len/2) {
+                rc = LOSE;
+                break;
+            }
         }
     }
 
     turnOffLeds();
     stopPlayingNote();
 
+    if (rc == WIN) {
+            displayMessage("Winner Winner!");
+            timeDelay(3);
+            rc = RESTART;
+    }
+
     if (rc == LOSE) {
         displayLosingMessages(); // when player lost, this plays
         timeDelay(3);
     }
+
+    timer_cnt = 0;
 
     return rc;
 }
@@ -143,9 +126,8 @@ void main (void) {
     _BIS_SR(GIE); // enables global interrupts
 
     unsigned int rc; /* declares return codes */
-    unsigned int cur_state = INTRO; /* starts the game */
+    cur_state = INTRO; /* starts the game */
     timer_cnt = 0;
-    cur_note = -1;
 
     /* initializes board */
     setAclk();
