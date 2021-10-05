@@ -13,15 +13,22 @@ void enableADC12(void) {
     // ADC12SHT0_9 = 384 ADC12CLK (ACLK) cycles between each sample
     // ADC12REFON = turns reference generator on with default 1.5 V
     // ADC12ON = turns ADC on
-    ADC12CTL0 = ADC12SHT0_9 | ADC12REFON | ADC12ON;
+    // ADC12MSC = enables multiple conversions
+    ADC12CTL0 = ADC12SHT0_9 | ADC12REFON | ADC12ON | ADC12MSC;
 
     // ADC12SHP = enables sample timer
-    ADC12CTL1 = ADC12SHP;
+    // ADC12CONSEQ_1 = enables multiple channel conversions
+    ADC12CTL1 = ADC12SHP | ADC12CONSEQ_1;
 
     // ADC12SREF_1 = uses internal reference 1.5 V
     // ADC12INCH_10 = A2 input channel of temperture sensor
     // ADC12MCTL0 = memory location to store conversion
     ADC12MCTL0 = ADC12SREF_1 + ADC12INCH_10;
+
+    // ADC12SREF_0 = uses Vref+ = VCC
+    // ADC12INCH_5 = A5 input channel of scroll wheel
+    // ADC12MCTL1 = memory location to store conversion
+    ADC12MCTL1 = ADC12SREF_0 + ADC12INCH_5 + ADC12EOS;
 
     __delay_cycles(100); // give refernce voltage time to settle to 1.5 v
     ADC12CTL0 |= ADC12ENC; // enable conversion
@@ -29,15 +36,26 @@ void enableADC12(void) {
 
 
 
-long unsigned int sampleTemp(void) {
-    long unsigned int temp_code;
+void configPotentiometer(void) {
+    P8SEL &= ~BIT0;
+    P8DIR |= BIT0;
+    P8OUT |= BIT0;
+}
 
+
+
+void startADC(void) {
     ADC12CTL0 &= ~ADC12SC; // clears the start bit
     ADC12CTL0 |= ADC12SC; // starts sampling and conversion
-                          // single conversion (single channel)
 
     while (ADC12CTL1 & ADC12BUSY) // waits for conversion to complete
         __no_operation();
+}
+
+
+
+long unsigned int sampleTemp(void) {
+    long unsigned int temp_code;
     temp_code = ADC12MEM0; // read in results if conversion
 
     return temp_code;
@@ -72,8 +90,7 @@ void runTimerA2(void) {
 
 
 
-void displayTime(long unsigned int timer_cnt)
-{
+void displayTime(long unsigned int timer_cnt, unsigned int time_state, int time_change) {
     // when timer_cnt = 1, 1 second of time has passed
 
     unsigned char dateToDisplay[7]; // will be month[3] + '-' + day[2] + null terminator
@@ -84,7 +101,22 @@ void displayTime(long unsigned int timer_cnt)
                                 // for example if timer_cnt = 61 then secondsPast = 1;
     minutesPast = ((timer_cnt - secondsPast)/60)%60;
     hoursPast = ((timer_cnt - secondsPast - minutesPast * 60)/3600)%24;
-    daysPast = ((timer_cnt - secondsPast - minutesPast * 60L - hoursPast * 3600L)/(24L*3600L)) + DAYSTOBIRTHDAY;
+    daysPast = ((timer_cnt - secondsPast - minutesPast * 60L - hoursPast * 3600L)/(24L*3600L));
+
+    switch(time_state) {
+        case DAY:
+            daysPast += time_change;
+            break;
+        case HOUR:
+            hoursPast += time_change;
+            break;
+        case MINUTE:
+            minutesPast += time_change;
+        case SECOND:
+            secondsPast += time_change;
+            break;
+    }
+
     //determines what month to display
     if (daysPast < 31)              //January
         {
@@ -281,14 +313,15 @@ void displayMessage(char* message) {
 
 
 float* insertTemp(float degC_temp, float* ptr_degC_temp_history, int degC_temp_history_len) {
+    // if the temperature the pointer is pointing to is equal to the end of array code
     if (*ptr_degC_temp_history == ENDOFARRAY) {
-        ptr_degC_temp_history -= (degC_temp_history_len - 1);
-        *ptr_degC_temp_history = degC_temp;
+        ptr_degC_temp_history -= (degC_temp_history_len - 1); // then the pointer must be set back to the beginning of the array
+        *ptr_degC_temp_history = degC_temp; // overrides the old temperature value with the new temperature value
     } else {
-        *ptr_degC_temp_history = degC_temp;
+        *ptr_degC_temp_history = degC_temp; // overrides the old temperature value with the new temperature value
     }
 
-    ptr_degC_temp_history++;
+    ptr_degC_temp_history++; // increases the pointer to the next memory location in the array
 
     return ptr_degC_temp_history;
 }
@@ -300,22 +333,111 @@ float calcAvgTemp(float* ptr_degC_temp_history, int num_temp_samples, int degC_t
     int sample_size;
     int i;
 
-
+    // if the entire array has not been filled with temperature samples
     if (num_temp_samples < degC_temp_history_len - 1) {
-        sample_size = num_temp_samples;
+        sample_size = num_temp_samples; // then the sample size is based on the number of samples taken thus far
     } else {
-        sample_size = degC_temp_history_len - 1;
+        sample_size = degC_temp_history_len - 1; // otherwise, the sample size is equal to the size of the array
     }
 
-    for (i = 0; i < sample_size; i++) { // minus 1 so that null terminator not included
+    // adds samples up
+    for (i = 0; i < sample_size; i++) {
         degC_temp_avg += *ptr_degC_temp_history;
         ptr_degC_temp_history++;
     }
 
+    // calculates average
     degC_temp_avg = (degC_temp_avg/(sample_size));
 
     return degC_temp_avg;
 }
+
+
+
+unsigned int getUnitOfTime(unsigned int cur_time_time_state) {
+    unsigned int time_change = 0;
+    unsigned int cur_time_code = 0;
+    unsigned int prev_time_code;
+
+    while((P2IN & BIT1) != 0x00 || (P1IN & BIT1) != 0x00) {
+        prev_time_code = cur_time_code;
+        cur_time_code = ADC12MEM1; // read in results if conversion
+
+        time_change = cur_time_code - prev_time_code;
+    }
+
+    return time_change;
+}
+
+
+
+void stopTimerA2(void) {
+    TA2CTL = MC_0;
+    TA2CCTL0 &= ~CCIE;
+}
+
+
+
+void configLaunchPadButtons(void) {//Guess that these are for the Launch-pad
+
+    P1SEL &= ~(BIT1);
+    P2SEL &= ~(BIT1);
+
+    P1DIR &= ~(BIT1);
+    P2DIR &= ~(BIT1);
+
+    P1REN |= (BIT1);
+    P2REN |= (BIT1);
+
+    P1OUT |= (BIT1);
+    P2OUT |= (BIT1);
+}
+
+
+
+unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt) {
+    unsigned int time_state = cur_time_time_state;
+    unsigned int time_change;
+
+    if ((P1IN & BIT1) == 0x00) {
+        stopTimerA2();
+        switch(time_state) {
+            case MONTH:
+                displayMessage("Edit Month"); //Should this be Month or Day?
+                break;
+            case DAY:
+                displayMessage("Edit Day");
+                break;
+            case HOUR:
+                displayMessage("Edit Hour");
+                break;
+            case MINUTE:
+                displayMessage("Edit Min");
+            case SECOND:
+                displayMessage("Edit Sec");
+                break;
+        }
+
+        time_change = getUnitOfTime(time_state);
+        displayTime(timer_cnt, time_state, time_change);
+
+        if (time_state == SECOND) {
+            time_state = MONTH;
+        } else {
+            time_state++;
+        }
+
+    }
+
+    if ((P2IN & BIT1) == 0x00) {
+        time_state = END;
+        runTimerA2();
+    }
+
+    return time_state;
+}
+
+
 
 
 

@@ -8,6 +8,7 @@
 #define CALADC12_15V_celcius_85 *((unsigned int *) 0x1A1C) // address from datasheet, storing 85 C
 long unsigned int timer_cnt;
 
+
 #pragma vector = TIMER2_A0_VECTOR
 __interrupt void TimerA2_ISR(void) {
     timer_cnt++;
@@ -23,6 +24,7 @@ void main (void) {
     float degC_temp_history[TEMPHISTORYLEN];
     float* ptr_degC_temp_history = degC_temp_history;
     int num_temp_samples;
+    unsigned int time_state = 0;
 
     timer_cnt = 0;
     num_temp_samples = 0;
@@ -41,9 +43,14 @@ void main (void) {
     setA2();
     runTimerA2();
     configDisplay();
+    configPotentiometer();
+    configLaunchPadButtons(); //I assume
 
     while (1) {
-        displayTime(timer_cnt);
+        startADC();
+        displayTime(timer_cnt, 0, 0);
+
+        time_state = editTime(time_state, timer_cnt);
         temp_code = sampleTemp();
 
         // calculates temperature in Celsius
@@ -51,11 +58,12 @@ void main (void) {
         // "System Resets, Interrupts, and Operating Modes, System Control Module"
         // chapter in the device user's guide for background information on the formula.
         degC_temp = (float)((long)temp_code - CALADC12_15V_celcius_30) * degC_per_bit +30.0;
-        num_temp_samples++;
-        ptr_degC_temp_history = insertTemp(degC_temp, ptr_degC_temp_history, TEMPHISTORYLEN);
-        degC_temp_avg = calcAvgTemp(degC_temp_history, num_temp_samples, TEMPHISTORYLEN);
+        num_temp_samples++; // keeps track of the number of temp samples taken
+        ptr_degC_temp_history = insertTemp(degC_temp, ptr_degC_temp_history, TEMPHISTORYLEN); // inserts temp into temp history array
+        degC_temp_avg = calcAvgTemp(degC_temp_history, num_temp_samples, TEMPHISTORYLEN); // caculates the average temperature
 
-        displayTemp(degC_temp_avg);
+        displayTemp(degC_temp_avg); // displays average temp
+
 
         __no_operation();
     }
