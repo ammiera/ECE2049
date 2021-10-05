@@ -90,12 +90,14 @@ void runTimerA2(void) {
 
 
 
-void displayTime(long unsigned int timer_cnt, unsigned int time_state, int time_change) {
+void displayTime(long unsigned int timer_cnt, unsigned int potentiometer_state) {
     // when timer_cnt = 1, 1 second of time has passed
 
     unsigned char dateToDisplay[7]; // will be month[3] + '-' + day[2] + null terminator
     unsigned char timeToDisplay[9]; // will be hour[2] + ':' minute[2] + ':' + second[2] + null terminator
     unsigned long daysPast, hoursPast, minutesPast, secondsPast;
+
+
 
     secondsPast = timer_cnt%60; // calculates seconds passed within 60 seconds
                                 // for example if timer_cnt = 61 then secondsPast = 1;
@@ -232,9 +234,9 @@ void displayTime(long unsigned int timer_cnt, unsigned int time_state, int time_
     timeToDisplay[7] = second[1];
     timeToDisplay[8] = 0x00; //null terminator
     //Print these two arrays
-    Graphics_clearDisplay(&g_sContext);
-    Graphics_drawStringCentered(&g_sContext, dateToDisplay, AUTO_STRING_LENGTH, 48, 45, TRANSPARENT_TEXT);
-    Graphics_drawStringCentered(&g_sContext, timeToDisplay, AUTO_STRING_LENGTH, 48, 55, TRANSPARENT_TEXT);
+
+    Graphics_drawStringCentered(&g_sContext, dateToDisplay, AUTO_STRING_LENGTH, 48, 15, TRANSPARENT_TEXT);
+    Graphics_drawStringCentered(&g_sContext, timeToDisplay, AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
     Graphics_flushBuffer(&g_sContext);
 }
 
@@ -290,8 +292,7 @@ void displayTemp(float degC_temperature) {
     tempDisplay[15] = 0x46; //The ASCII Character for the letter 'F'
     tempDisplay[16] = 0x00; //The ASCII Character for the null terminator
 
-    Graphics_clearDisplay(&g_sContext); // clears the display
-    Graphics_drawStringCentered(&g_sContext, tempDisplay, AUTO_STRING_LENGTH, 48, 45, TRANSPARENT_TEXT);
+    Graphics_drawStringCentered(&g_sContext, tempDisplay, AUTO_STRING_LENGTH, 48, 35, TRANSPARENT_TEXT);
     Graphics_flushBuffer(&g_sContext); //flushes text to the display, updating it
 }
 
@@ -393,7 +394,22 @@ void configLaunchPadButtons(void) {//Guess that these are for the Launch-pad
     P2OUT |= (BIT1);
 }
 
+unsigned int checkButton(void) {
+    unsigned int ret_code;
 
+    if ((P1IN & BIT1) == 0x00) {
+        ret_code = RIGHTBUTTON;
+    }
+
+    if ((P2IN & BIT1) == 0x00) {
+        ret_code = LEFTBUTTON;
+    }
+}
+
+unsigned int checkPotentiometer(void) {
+    unsigned int ret_code = ADC12MEM1;
+    return ret_code;
+}
 
 unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt) {
     unsigned int time_state = cur_time_time_state;

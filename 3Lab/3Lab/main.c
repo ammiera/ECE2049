@@ -26,6 +26,10 @@ void main (void) {
     int num_temp_samples;
     unsigned int time_state = 0;
 
+    unsigned int button_pressed;
+    unsigned int potentiometer_state;
+    unsigned int cur_time_unit = 0;
+
     timer_cnt = 0;
     num_temp_samples = 0;
 
@@ -48,7 +52,32 @@ void main (void) {
 
     while (1) {
         startADC();
+        Graphics_clearDisplay(&g_sContext); //flushes text to the display, updating it
+
+        button_pressed = checkButton();
+        if (button_pressed == LEFTBUTTON) {
+
+            // keeps current time unit as months at first button press
+            if (cur_time_unit != 0) {
+                cur_time_unit++;
+            }
+
+            if (cur_time_unit > 5) {
+                cur_time_unit = 0;
+            }
+
+            potentiometer_state = checkPotentiometer();
+
+        }
+
+        if (button_pressed == RIGHTBUTTON) {
+        }
+
+
+
         displayTime(timer_cnt, 0, 0);
+
+
 
         time_state = editTime(time_state, timer_cnt);
         temp_code = sampleTemp();

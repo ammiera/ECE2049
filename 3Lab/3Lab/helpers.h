@@ -19,6 +19,9 @@
 #define SECOND 4
 #define END 5
 
+#define LEFTBUTTON 0x01
+#define RIGHTBUTTON 0x02
+
 unsigned char month[3];
 unsigned char day[2];
 unsigned char hour[2];
@@ -31,7 +34,7 @@ long unsigned int sampleTemp(void);
 void setA2(void);
 void configPotentiometer(void);
 void runTimerA2(void);
-void displayTime(long unsigned int timer_cnt, unsigned int time_state, int time_change);
+void displayTime(long unsigned int timer_cnt, unsigned int potentiometer_state);
 void displayMessage(char* message);
 void displayTemp(float inAvgTempC);
 float* insertTemp(float degC_temp, float* ptr_degC_temp_history, int degC_temp_history_len);
@@ -41,5 +44,8 @@ void updateTime(unsigned int edit_state, unsigned int unitOfTime);
 void configLaunchPadButtons(void);
 unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt);
 unsigned int getUnitOfTime(unsigned int cur_state);
+
+unsigned int checkButton(void);
+unsigned int checkPotentiometer(void);
 
 #endif /* HELPERS_H_ */
