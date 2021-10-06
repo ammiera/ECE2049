@@ -56,17 +56,23 @@ void main (void) {
 
         button_pressed = checkButton();
         if (button_pressed == LEFTBUTTON) {
+            // stop and reset timer
+            //stopA2Timer(); // something like that
 
-            // keeps current time unit as months at first button press
+            // keeps current time unit as months at first left button press
             if (cur_time_unit != SEC) {
                 cur_time_unit++;
             }
 
+            // otherwise, a left button press means that the time unit is incremented
             if (cur_time_unit > MONTH) {
                 cur_time_unit = SEC;
             }
 
-            potentiometer_state = checkPotentiometer(user_time, cur_time_unit);
+            checkPotentiometer(user_time, cur_time_unit);
+            // get sum of user time array to get seconds
+            // sumUserTimeInSeconds(user_time);
+            editTime()
         }
 
         if (button_pressed == RIGHTBUTTON) {
@@ -74,10 +80,6 @@ void main (void) {
         }
 
         displayTime(timer_cnt);
-
-
-
-        time_state = editTime(time_state, timer_cnt);
         temp_code = sampleTemp();
 
         // calculates temperature in Celsius

@@ -434,7 +434,7 @@ unsigned int getDaysInMonth(unsigned int month) {
     return days;
 }
 
-unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt) {
+unsigned int editTime(long unsigned int timer_cnt) {
     unsigned int time_state = cur_time_time_state;
     unsigned int time_change;
 
@@ -457,7 +457,7 @@ unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_
                 break;
         }
 
-        displayTime(timer_cnt);
+
 
         if (time_state == SEC) {
             time_state = MONTH;
