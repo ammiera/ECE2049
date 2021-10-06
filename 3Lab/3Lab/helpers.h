@@ -11,22 +11,36 @@
 #define TEMPHISTORYLEN 36 + 1 // there will be 36 temp history values saved and 1 value that will represent the end of array
 #define ENDOFARRAY 404 // coldest temperature the temperature sensor can measure
 
-//Defining these for when using the scroll wheel
-#define MONTH 0
-#define DAY 1
-#define HOUR 2
-#define MINUTE 3
-#define SECOND 4
-#define END 5
-
-#define LEFTBUTTON 0x01
-#define RIGHTBUTTON 0x02
-
 unsigned char month[3];
 unsigned char day[2];
 unsigned char hour[2];
 unsigned char minute[2];
 unsigned char second[2];
+
+
+//Defining these for when using the scroll wheel
+#define MONTH 0
+#define DAY 1
+#define HOUR 2
+#define MINUTE 3
+#define SEC 4
+#define END 5
+
+#define JAN 1
+#define FEB 2
+#define MAR 3
+#define APR 4
+#define MAY 5
+#define JUN 6
+#define JUL 7
+#define AUG 8
+#define SEP 9
+#define OCT 10
+#define NOV 11
+#define DEC 12
+
+#define LEFTBUTTON 0x01
+#define RIGHTBUTTON 0x02
 
 void enableADC12(void);
 void startADC(void);
@@ -34,7 +48,7 @@ long unsigned int sampleTemp(void);
 void setA2(void);
 void configPotentiometer(void);
 void runTimerA2(void);
-void displayTime(long unsigned int timer_cnt, unsigned int potentiometer_state);
+void displayTime(long unsigned int timer_cnt);
 void displayMessage(char* message);
 void displayTemp(float inAvgTempC);
 float* insertTemp(float degC_temp, float* ptr_degC_temp_history, int degC_temp_history_len);
@@ -45,7 +59,12 @@ void configLaunchPadButtons(void);
 unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt);
 unsigned int getUnitOfTime(unsigned int cur_state);
 
+
+
+
+
+unsigned int getDaysInMonth(unsigned int month);
 unsigned int checkButton(void);
-unsigned int checkPotentiometer(void);
+void checkPotentiometer(unsigned int* timeArray, unsigned int cur_time_unit);
 
 #endif /* HELPERS_H_ */

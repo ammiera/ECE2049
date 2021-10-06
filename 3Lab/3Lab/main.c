@@ -58,15 +58,16 @@ void main (void) {
         if (button_pressed == LEFTBUTTON) {
 
             // keeps current time unit as months at first button press
-            if (cur_time_unit != 0) {
+            if (cur_time_unit != SECOND) {
                 cur_time_unit++;
             }
 
-            if (cur_time_unit > 5) {
-                cur_time_unit = 0;
+            if (cur_time_unit > MONTH) {
+                cur_time_unit = SECOND;
             }
 
             potentiometer_state = checkPotentiometer();
+
 
         }
 

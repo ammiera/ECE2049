@@ -90,21 +90,19 @@ void runTimerA2(void) {
 
 
 
-void displayTime(long unsigned int timer_cnt, unsigned int potentiometer_state) {
+void displayTime(long unsigned int timer_cnt) {
     // when timer_cnt = 1, 1 second of time has passed
 
     unsigned char dateToDisplay[7]; // will be month[3] + '-' + day[2] + null terminator
     unsigned char timeToDisplay[9]; // will be hour[2] + ':' minute[2] + ':' + second[2] + null terminator
     unsigned long daysPast, hoursPast, minutesPast, secondsPast;
 
-
-
     secondsPast = timer_cnt%60; // calculates seconds passed within 60 seconds
                                 // for example if timer_cnt = 61 then secondsPast = 1;
     minutesPast = ((timer_cnt - secondsPast)/60)%60;
     hoursPast = ((timer_cnt - secondsPast - minutesPast * 60)/3600)%24;
     daysPast = ((timer_cnt - secondsPast - minutesPast * 60L - hoursPast * 3600L)/(24L*3600L));
-
+    unsigned int time_state;
     switch(time_state) {
         case DAY:
             daysPast += time_change;
@@ -114,7 +112,7 @@ void displayTime(long unsigned int timer_cnt, unsigned int potentiometer_state) 
             break;
         case MINUTE:
             minutesPast += time_change;
-        case SECOND:
+        case SEC:
             secondsPast += time_change;
             break;
     }
@@ -395,20 +393,86 @@ void configLaunchPadButtons(void) {//Guess that these are for the Launch-pad
 }
 
 unsigned int checkButton(void) {
-    unsigned int ret_code;
+    unsigned int launch_code;
 
     if ((P1IN & BIT1) == 0x00) {
-        ret_code = RIGHTBUTTON;
+        launch_code = RIGHTBUTTON;
     }
 
     if ((P2IN & BIT1) == 0x00) {
-        ret_code = LEFTBUTTON;
+        launch_code = LEFTBUTTON;
     }
 }
 
-unsigned int checkPotentiometer(void) {
-    unsigned int ret_code = ADC12MEM1;
-    return ret_code;
+void checkPotentiometer(unsigned int* timeArray, unsigned int cur_time_unit) {
+    unsigned int pot_code = ADC12MEM1;
+    long unsigned int ret_seconds;
+    unsigned int days_in_month;
+
+    switch(cur_time_unit) {
+        case MONTH:
+            unsigned int month = pot_code%12;
+            days_in_month = getDaysInMonth(month);
+            ret_seconds = days_in_month*24*60*60;
+            timeArray[MONTH] = ret_seconds;
+            break;
+        case DAY:
+            unsigned int day =  pot_code%60;
+            ret_seconds = day*60*60;
+            timeArray[DAY] = ret_seconds;
+            break;
+        case HOUR:
+            unsigned int hour = pot_code%60;
+            ret_seconds = hour*60;
+            timeArray[HOUR] = ret_seconds;
+            break;
+        case SEC:
+            unsigned int seconds = pot_code%60;
+            timeArray[SEC] = seconds;
+            break;
+    }
+}
+
+unsigned int getDaysInMonth(unsigned int month) {
+    unsigned int days;
+    switch(month) {
+        case JAN:
+            days = 30;
+            break;
+        case FEB:
+            days = 28;
+            break;
+        case MAR:
+            days = 31;
+            break;
+        case APR:
+            days = 30;
+            break;
+        case MAY:
+            days = 31;
+            break;
+        case JUN:
+            days = 30;
+            break;
+        case JUL:
+            days = 31;
+            break;
+        case AUG:
+            days = 31;
+            break;
+        case SEP:
+            days = 30;
+            break;
+        case OCT:
+            days = 31;
+            break;
+        case NOV:
+            days = 30;
+            break;
+        case DEC:
+            days = 31;
+            break;
+    }
 }
 
 unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt) {
@@ -429,7 +493,7 @@ unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_
                 break;
             case MINUTE:
                 displayMessage("Edit Min");
-            case SECOND:
+            case SEC:
                 displayMessage("Edit Sec");
                 break;
         }
@@ -437,7 +501,7 @@ unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_
         time_change = getUnitOfTime(time_state);
         displayTime(timer_cnt, time_state, time_change);
 
-        if (time_state == SECOND) {
+        if (time_state == SEC) {
             time_state = MONTH;
         } else {
             time_state++;
