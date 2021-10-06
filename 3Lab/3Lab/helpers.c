@@ -4,8 +4,7 @@
 #include "peripherals.h"
 #include <math.h>
 
-
-
+// configures and enables the ADC
 void enableADC12(void) {
     REFCTL0 &= ~REFMSTR; // resets REFMSTR to hand over control of internal
                          // reference voltages to ADC12_A control registers
@@ -34,16 +33,14 @@ void enableADC12(void) {
     ADC12CTL0 |= ADC12ENC; // enable conversion
 }
 
-
-
+// configures the potentiometer port settings
 void configPotentiometer(void) {
     P8SEL &= ~BIT0;
     P8DIR |= BIT0;
     P8OUT |= BIT0;
 }
 
-
-
+// starts the ADC and waits for a sample conversion to complete
 void startADC(void) {
     ADC12CTL0 &= ~ADC12SC; // clears the start bit
     ADC12CTL0 |= ADC12SC; // starts sampling and conversion
@@ -52,8 +49,7 @@ void startADC(void) {
         __no_operation();
 }
 
-
-
+// samples the temperature from the temperature sensor
 long unsigned int sampleTemp(void) {
     long unsigned int temp_code;
     temp_code = ADC12MEM0; // read in results if conversion
@@ -61,8 +57,7 @@ long unsigned int sampleTemp(void) {
     return temp_code;
 }
 
-
-
+// sets the A2 clock to its default settings
 void setA2(void) {
     P5SEL |= (BIT5 | BIT4 | BIT3 | BIT2 | BIT1);
 
@@ -78,8 +73,7 @@ void setA2(void) {
     UCSCTL8 = 0x0707;
 }
 
-
-
+// enables the timer count interrupt
 void runTimerA2(void) {
     TA2CTL = (TASSEL_1 | ID_0 | MC_1); // chooses ACLK as the source clock,
                                        // chooses input divider to be divide by 1,
@@ -88,11 +82,8 @@ void runTimerA2(void) {
     TA2CCTL0 = CCIE; // enables TA2CCRO interrupt
 }
 
-
-
+// displays the time according to the timer_cnt
 void displayTime(long unsigned int timer_cnt) {
-    // when timer_cnt = 1, 1 second of time has passed
-
     unsigned char dateToDisplay[7]; // will be month[3] + '-' + day[2] + null terminator
     unsigned char timeToDisplay[9]; // will be hour[2] + ':' minute[2] + ':' + second[2] + null terminator
     unsigned long daysPast, hoursPast, minutesPast, secondsPast;
@@ -102,20 +93,6 @@ void displayTime(long unsigned int timer_cnt) {
     minutesPast = ((timer_cnt - secondsPast)/60)%60;
     hoursPast = ((timer_cnt - secondsPast - minutesPast * 60)/3600)%24;
     daysPast = ((timer_cnt - secondsPast - minutesPast * 60L - hoursPast * 3600L)/(24L*3600L));
-    unsigned int time_state;
-    switch(time_state) {
-        case DAY:
-            daysPast += time_change;
-            break;
-        case HOUR:
-            hoursPast += time_change;
-            break;
-        case MINUTE:
-            minutesPast += time_change;
-        case SEC:
-            secondsPast += time_change;
-            break;
-    }
 
     //determines what month to display
     if (daysPast < 31)              //January
@@ -238,8 +215,7 @@ void displayTime(long unsigned int timer_cnt) {
     Graphics_flushBuffer(&g_sContext);
 }
 
-
-
+// displays the temperature according to the converted temperature value
 void displayTemp(float degC_temperature) {
 
     //Take in C temperature & Makes a copy of it
@@ -294,9 +270,7 @@ void displayTemp(float degC_temperature) {
     Graphics_flushBuffer(&g_sContext); //flushes text to the display, updating it
 }
 
-
-
-
+// displays a generic message
 void displayMessage(char* message) {
 
     Graphics_clearDisplay(&g_sContext); // clears the display
@@ -308,9 +282,7 @@ void displayMessage(char* message) {
     Graphics_flushBuffer(&g_sContext);
 }
 
-
-
-
+// inserts temp into temp array
 float* insertTemp(float degC_temp, float* ptr_degC_temp_history, int degC_temp_history_len) {
     // if the temperature the pointer is pointing to is equal to the end of array code
     if (*ptr_degC_temp_history == ENDOFARRAY) {
@@ -325,8 +297,7 @@ float* insertTemp(float degC_temp, float* ptr_degC_temp_history, int degC_temp_h
     return ptr_degC_temp_history;
 }
 
-
-
+// calculates the average temperature according to the current and past 36 values
 float calcAvgTemp(float* ptr_degC_temp_history, int num_temp_samples, int degC_temp_history_len) {
     float degC_temp_avg = 0;
     int sample_size;
@@ -350,24 +321,6 @@ float calcAvgTemp(float* ptr_degC_temp_history, int num_temp_samples, int degC_t
 
     return degC_temp_avg;
 }
-
-
-
-unsigned int getUnitOfTime(unsigned int cur_time_time_state) {
-    unsigned int time_change = 0;
-    unsigned int cur_time_code = 0;
-    unsigned int prev_time_code;
-
-    while((P2IN & BIT1) != 0x00 || (P1IN & BIT1) != 0x00) {
-        prev_time_code = cur_time_code;
-        cur_time_code = ADC12MEM1; // read in results if conversion
-
-        time_change = cur_time_code - prev_time_code;
-    }
-
-    return time_change;
-}
-
 
 
 void stopTimerA2(void) {
@@ -408,26 +361,30 @@ void checkPotentiometer(unsigned int* timeArray, unsigned int cur_time_unit) {
     unsigned int pot_code = ADC12MEM1;
     long unsigned int ret_seconds;
     unsigned int days_in_month;
+    unsigned int month;
+    unsigned int day;
+    unsigned int hour;
+    unsigned int seconds;
 
     switch(cur_time_unit) {
         case MONTH:
-            unsigned int month = pot_code%12;
+            month = pot_code%12;
             days_in_month = getDaysInMonth(month);
             ret_seconds = days_in_month*24*60*60;
             timeArray[MONTH] = ret_seconds;
             break;
         case DAY:
-            unsigned int day =  pot_code%60;
+            day =  pot_code%60;
             ret_seconds = day*60*60;
             timeArray[DAY] = ret_seconds;
             break;
         case HOUR:
-            unsigned int hour = pot_code%60;
+            hour = pot_code%60;
             ret_seconds = hour*60;
             timeArray[HOUR] = ret_seconds;
             break;
         case SEC:
-            unsigned int seconds = pot_code%60;
+            seconds = pot_code%60;
             timeArray[SEC] = seconds;
             break;
     }
@@ -473,6 +430,8 @@ unsigned int getDaysInMonth(unsigned int month) {
             days = 31;
             break;
     }
+
+    return days;
 }
 
 unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt) {
@@ -498,8 +457,7 @@ unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_
                 break;
         }
 
-        time_change = getUnitOfTime(time_state);
-        displayTime(timer_cnt, time_state, time_change);
+        displayTime(timer_cnt);
 
         if (time_state == SEC) {
             time_state = MONTH;

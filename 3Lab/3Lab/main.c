@@ -58,25 +58,22 @@ void main (void) {
         if (button_pressed == LEFTBUTTON) {
 
             // keeps current time unit as months at first button press
-            if (cur_time_unit != SECOND) {
+            if (cur_time_unit != SEC) {
                 cur_time_unit++;
             }
 
             if (cur_time_unit > MONTH) {
-                cur_time_unit = SECOND;
+                cur_time_unit = SEC;
             }
 
-            potentiometer_state = checkPotentiometer();
-
-
+            potentiometer_state = checkPotentiometer(user_time, cur_time_unit);
         }
 
         if (button_pressed == RIGHTBUTTON) {
+            // start timer
         }
 
-
-
-        displayTime(timer_cnt, 0, 0);
+        displayTime(timer_cnt);
 
 
 

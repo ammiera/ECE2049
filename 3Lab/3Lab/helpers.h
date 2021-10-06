@@ -42,29 +42,32 @@ unsigned char second[2];
 #define LEFTBUTTON 0x01
 #define RIGHTBUTTON 0x02
 
+// ADC
 void enableADC12(void);
 void startADC(void);
-long unsigned int sampleTemp(void);
-void setA2(void);
+
+// potentiometer
 void configPotentiometer(void);
-void runTimerA2(void);
-void displayTime(long unsigned int timer_cnt);
-void displayMessage(char* message);
+void checkPotentiometer(unsigned int* timeArray, unsigned int cur_time_unit);
+
+// temp
+long unsigned int sampleTemp(void);
 void displayTemp(float inAvgTempC);
 float* insertTemp(float degC_temp, float* ptr_degC_temp_history, int degC_temp_history_len);
 float calcAvgTemp(float* ptr_degC_temp_history, int num_temp_data, int degC_temp_history_len);
+
+// time
+void setA2(void);
+void runTimerA2(void);
+void displayTime(long unsigned int timer_cnt);
 void stopTimerA2(void);
 void updateTime(unsigned int edit_state, unsigned int unitOfTime);
-void configLaunchPadButtons(void);
 unsigned int editTime(unsigned int cur_time_time_state, long unsigned int timer_cnt);
-unsigned int getUnitOfTime(unsigned int cur_state);
-
-
-
-
-
 unsigned int getDaysInMonth(unsigned int month);
+
+// general
+void displayMessage(char* message);
+void configLaunchPadButtons(void);
 unsigned int checkButton(void);
-void checkPotentiometer(unsigned int* timeArray, unsigned int cur_time_unit);
 
 #endif /* HELPERS_H_ */
